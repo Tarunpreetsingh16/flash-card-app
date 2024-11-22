@@ -1,15 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { FlatList, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from 'expo-router';
+import { Flashcard } from '@/data/FlashCard';
+import CardView from '@/components/CardView';
 
-
-interface Flashcard {
-    id: number;
-    front: string;
-    back: string;
-    tags: string[];
-}
 
 const FlashcardList: React.FC = () => {
     const [flashcards, setFlashcards] = useState<Flashcard[]>([]);
@@ -32,9 +27,7 @@ const FlashcardList: React.FC = () => {
     }, []));
 
     const renderItem = ({ item }: { item: Flashcard }) => (
-        <View style={styles.flashcardItem}>
-            <Text>{item.front}</Text>
-        </View>
+        <CardView flashCard={item} />
     );
 
     return (
@@ -48,16 +41,9 @@ const FlashcardList: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
-
     listContainer: {
         padding: 20,
-    },
-    flashcardItem: {
-        padding: 10,
-        borderWidth: 1,
-        borderColor: '#ccc',
-        marginBottom: 10,
-    },
+    }
 });
 
 export default FlashcardList;

@@ -1,14 +1,7 @@
 import React, { useState } from 'react';
 import { View, TextInput, Button, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-
-interface Flashcard {
-    id: number;
-    front: string;
-    back: string;
-    tags: string[];
-}
+import { Flashcard } from '@/data/FlashCard';
 
 const AddCard: React.FC = () => {
     const [front, setFront] = useState('');
