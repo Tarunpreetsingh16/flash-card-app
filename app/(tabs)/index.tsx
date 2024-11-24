@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FlatList, StyleSheet } from 'react-native';
+import { FlatList, StyleSheet, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from 'expo-router';
 import { Flashcard } from '@/data/FlashCard';
@@ -42,7 +42,6 @@ const FlashcardList: React.FC = () => {
 
 const styles = StyleSheet.create({
     listContainer: {
-        padding: 20,
     }
 });
 

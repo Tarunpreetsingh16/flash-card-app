@@ -7,9 +7,10 @@ const AddCard: React.FC = () => {
     const [front, setFront] = useState('');
     const [back, setBack] = useState('');
     const [tags, setTags] = useState('');
+    const [imageUri, setImageUri] = useState('');
 
     const handleSubmit = async () => {
-        if (!front || !back || !tags) {
+        if (!front || !back || !tags || !imageUri) {
             return;
         }
 
@@ -23,7 +24,8 @@ const AddCard: React.FC = () => {
                 id: flashcards.length > 0 ? flashcards[flashcards.length - 1].id + 1 : 1,
                 front,
                 back,
-                tags: tagList
+                tags: tagList,
+                imageUri
             };
 
             flashcards.push(newFlashcard);
@@ -34,6 +36,7 @@ const AddCard: React.FC = () => {
             setFront('');
             setBack('');
             setTags('');
+            setImageUri('');
         } catch (error) {
             console.error('Error creating flashcard:', error);
         }
@@ -58,6 +61,12 @@ const AddCard: React.FC = () => {
                 placeholder="Comma separate tags"
                 value={tags.toString()}
                 onChangeText={setTags}
+            />
+            <TextInput
+                style={styles.input}
+                placeholder="Image URI"
+                value={imageUri}
+                onChangeText={setImageUri}
             />
             <Button title="Create Flashcard" onPress={handleSubmit} />
         </View>
