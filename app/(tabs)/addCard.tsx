@@ -20,13 +20,13 @@ const AddCard: React.FC = () => {
             const existingFlashcards = await AsyncStorage.getItem('flashcards') || '[]';
             const flashcards: Flashcard[] = JSON.parse(existingFlashcards);
 
-            const newFlashcard: Flashcard = {
-                id: flashcards.length > 0 ? flashcards[flashcards.length - 1].id + 1 : 1,
+            const newFlashcard: Flashcard = new Flashcard(
+                flashcards.length > 0 ? flashcards[flashcards.length - 1].id + 1 : 1,
                 front,
                 back,
-                tags: tagList,
+                tagList,
                 imageUri
-            };
+            );
 
             flashcards.push(newFlashcard);
 

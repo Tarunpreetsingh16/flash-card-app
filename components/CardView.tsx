@@ -1,4 +1,5 @@
 import { Flashcard } from "@/data/FlashCard";
+import { Option } from "@/data/Option";
 import { FontAwesome } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import { Button, Image, StyleProp, StyleSheet, Text, View, ViewStyle } from "react-native";
@@ -22,8 +23,8 @@ export default function CardView(cardViewData: CardViewData) {
 
     }, [revealAnswer])
 
-
     const { flashCard, style } = cardViewData;
+    
     return (
         <View style={[styles.flashcardItem, style]}>
             <View style={[styles.profileContainer, styles.postPadding]}>
@@ -38,17 +39,17 @@ export default function CardView(cardViewData: CardViewData) {
                 <View style={styles.cardAttributes}>
                     <View style={styles.attributeView}>
                         <FontAwesome name="thumbs-o-up" style={styles.icon} />
-                        <Text>28</Text>
+                        <Text>{flashCard.likes}</Text>
                     </View>
                     
                     <View style={styles.attributeView}>
                         <FontAwesome name="thumbs-o-down" style={styles.icon} />
-                        <Text>5</Text>
+                        <Text>{flashCard.dislikes}</Text>
                     </View>
                     
                     <View style={styles.attributeView}>
                         <FontAwesome name="share-alt" style={styles.icon} />
-                        <Text>5</Text>
+                        <Text>{flashCard.shares}</Text>
                     </View>
                 </View>
                 <View style={styles.otherAttributes}>
@@ -56,8 +57,19 @@ export default function CardView(cardViewData: CardViewData) {
                     <FontAwesome name="ellipsis-v" style={styles.icon} />
                 </View>
             </View>
-            <Text onPress={() => setRevealAnswer(!revealAnswer)} style={[styles.button, styles.postPadding]}>{buttonTitle} </Text>
-            {revealAnswer ? <Text style={[styles.answer, styles.postPadding]}>{flashCard.back}</Text> : null}
+            {/* <Text onPress={() => setRevealAnswer(!revealAnswer)} style={[styles.button, styles.postPadding]}>{buttonTitle} </Text>
+            {revealAnswer ? <Text style={[styles.answer, styles.postPadding]}>{flashCard.back}</Text> : null} */}
+            
+            <View style={styles.options}>
+                {
+                    flashCard.options?.map((option, index) => 
+                        <View style={[styles.option, option.correct ? styles.correctOption : styles.wrongOption]} key={index}>
+                            <Text>{option.text}</Text>
+                            <Text>{option.selectCount}%</Text>
+                        </View>
+                    )
+                }
+            </View>
         </View>
     )
 }
@@ -127,5 +139,29 @@ const styles = StyleSheet.create({
     },
     postPadding: {
         paddingHorizontal: 15
+    },
+    options: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-evenly',
+        marginTop: 10
+    },
+    option: { 
+        width: '30%',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 10,
+        borderWidth: 1,
+        padding: 5,
+    },
+    correctOption: {
+        borderColor: '#99F071',
+        backgroundColor: '#C8F0B6',
+    },
+    wrongOption: {
+        borderColor: '#F04848',
+        backgroundColor: '#F19696',
     }
 });

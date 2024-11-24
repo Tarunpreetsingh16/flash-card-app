@@ -43,15 +43,11 @@ const FlashcardList: React.FC = () => {
             data={flashcards}
             renderItem={renderItem}
             keyExtractor={(item) => item.id.toString()}
-            contentContainerStyle={styles.listContainer}
         />
     );
 };
 
 const styles = StyleSheet.create({
-    listContainer: {
-        padding: 20,
-    }
 });
 
 export default FlashcardList;
