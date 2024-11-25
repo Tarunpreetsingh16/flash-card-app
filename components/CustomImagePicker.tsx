@@ -50,6 +50,7 @@ export default function CustomImagePicker(props: CustomImagePickerProps) {
 
 const styles = StyleSheet.create({
     container: {
+        marginBottom: 10,
     },
     image: {
         width: '100%',
@@ -68,9 +69,10 @@ const styles = StyleSheet.create({
     text: {
         color: 'white',
         fontWeight: 'bold',
-        backgroundColor: 'grey',
+        backgroundColor: 'rgba(0, 0, 0, 0.7)',
         padding: 10,
         borderTopRightRadius: 5,
         borderTopLeftRadius: 5,
+        width: 150,
     },
 });

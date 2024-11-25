@@ -34,9 +34,10 @@ const styles = StyleSheet.create({
     label: {
         color: 'white',
         fontWeight: 'bold',
-        backgroundColor: 'grey',
+        backgroundColor: 'rgba(0, 0, 0, 0.7)',
         padding: 10,
         borderTopRightRadius: 5,
         borderTopLeftRadius: 5,
+        width: 150
     }
 })

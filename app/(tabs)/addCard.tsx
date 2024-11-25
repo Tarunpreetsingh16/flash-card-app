@@ -15,7 +15,11 @@ const AddCard: React.FC = () => {
     const tagsRef = useRef(tags);
     const [imageUri, setImageUri] = useState<string | null>(null);
     const imageUriRef = useRef(imageUri);
-    
+    const [option2, setOption2] = useState('');
+    const option2Ref = useRef(option2);
+    const [option3, setOption3] = useState('');
+    const option3Ref = useRef(option3);
+
     const router = useNavigation();
 
     useEffect(() => {
@@ -83,17 +87,25 @@ const AddCard: React.FC = () => {
         imageUriRef.current = text;
         setImageUri(imageUriRef.current);
     }
+    const updateOption2 = (text: string) => {
+        option2Ref.current = text;
+        setOption2(option2Ref.current);
+    }
+    const updateOption3 = (text: string) => {
+        option3Ref.current = text;
+        setOption3(option3Ref.current);
+    }
 
     return (
         <ScrollView style={styles.container}>
             <LabelTextInput
-                placeholder="Front of flashcard"
+                placeholder="Front of flashcard..."
                 value={front}
                 onChange={updateFront}
                 label='Question'
             />
             <LabelTextInput
-                placeholder="Back of flashcard"
+                placeholder="Correct answer..."
                 value={back}
                 onChange={updateBack}
                 label='Answer'
@@ -108,13 +120,27 @@ const AddCard: React.FC = () => {
                 imageUri={imageUri}
                 setImageUri={updateImageUri}
             />
+
+            <LabelTextInput
+                placeholder="Wrong answer..."
+                value={option2}
+                onChange={updateOption2}
+                label='Option 2'
+            />
+            <LabelTextInput
+                placeholder="Wrong answer..."
+                value={option3}
+                onChange={updateOption3}
+                label='Option 3'
+            />
         </ScrollView>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
-        padding: 20,
+        paddingHorizontal: 5,
+        margin: 10
     },
     input: {
         borderWidth: 1,
