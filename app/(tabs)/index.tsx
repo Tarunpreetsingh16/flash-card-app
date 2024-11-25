@@ -1,19 +1,20 @@
 import React, { useState } from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
+import { FlatList, StyleSheet, Text, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useFocusEffect } from 'expo-router';
+import { useFocusEffect, useRouter } from 'expo-router';
 import { Flashcard } from '@/data/FlashCard';
 import CardView from '@/components/CardView';
 
 
 const FlashcardList: React.FC = () => {
-    const [flashcards, setFlashcards] = useState<Flashcard[]>([]);
+    const [flashcards, setFlashcards] = useState<Flashcard[] | null>(null);
+    const router = useRouter();
 
     useFocusEffect(React.useCallback(() => {
         const loadFlashcards = async () => {
             try {
                 const storedFlashcards = await AsyncStorage.getItem('flashcards');
-                console.log({storedFlashcards});
+                setFlashcards(null);
                 if (storedFlashcards !== null) {
                     setFlashcards(JSON.parse(storedFlashcards));
                 }
@@ -26,22 +27,42 @@ const FlashcardList: React.FC = () => {
 
     }, []));
 
+    const routeToCardCreation = () => {
+        router.push('/(tabs)/addCard');
+    }
+
     const renderItem = ({ item }: { item: Flashcard }) => (
         <CardView flashCard={item} />
     );
 
     return (
-        <FlatList
-            data={flashcards}
-            renderItem={renderItem}
-            keyExtractor={(item) => item.id.toString()}
-            contentContainerStyle={styles.listContainer}
-        />
+        <>
+            {
+                flashcards
+                    ? <FlatList
+                        data={flashcards}
+                        renderItem={renderItem}
+                        keyExtractor={(item) => item.id.toString()}
+                    />
+                    : <View style={styles.noCardView}>
+                        <Text style={styles.noCardMessage} onPress={routeToCardCreation}>
+                            Let's create my first card!
+                        </Text>
+                    </View>
+            }
+        </>
     );
 };
 
 const styles = StyleSheet.create({
-    listContainer: {
+    noCardView: {
+        height: '100%',
+        justifyContent: 'center',
+        alignSelf: 'center',
+    },
+    noCardMessage: {
+        fontSize: 20,
+        fontStyle: 'italic',
     }
 });
 

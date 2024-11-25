@@ -8,10 +8,7 @@ const Search: React.FC = () => {
     const router = useRouter();
 
     const searchCards = () => {
-        console.log({searchText});
-        console.log(searchText && searchText.trim().length != 0);
         if (searchText && searchText.trim().length != 0) {
-        console.log("here", !searchText && searchText.trim().length != 0);
         router.push(`/searchResult?keyword=${searchText}`);
         }
     }

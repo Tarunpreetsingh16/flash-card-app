@@ -5,13 +5,13 @@ export class Flashcard {
     front: string;
     back: string;
     tags: string[];
-    imageUri: string;
+    imageUri: string | null;
     options: Option[];
     likes?: number = 0;
     dislikes?: number = 0;
     shares?: number = 0;
 
-    constructor(id: number, front: string, back: string, tags: string[], imageUri: string, options?: Option[], likes?: number, dislikes?: number, shares?: number) {
+    constructor(id: number, front: string, back: string, tags: string[], imageUri: string | null, options?: Option[], likes?: number, dislikes?: number, shares?: number) {
         this.id = id;
         this.front = front;
         this.back = back;
