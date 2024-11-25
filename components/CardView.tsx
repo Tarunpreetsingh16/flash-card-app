@@ -57,8 +57,8 @@ export default function CardView(cardViewData: CardViewData) {
                     <FontAwesome name="ellipsis-v" style={styles.icon} />
                 </View>
             </View>
-            {/* <Text onPress={() => setRevealAnswer(!revealAnswer)} style={[styles.button, styles.postPadding]}>{buttonTitle} </Text>
-            {revealAnswer ? <Text style={[styles.answer, styles.postPadding]}>{flashCard.back}</Text> : null} */}
+            <Text onPress={() => setRevealAnswer(!revealAnswer)} style={[styles.button, styles.postPadding]}>{buttonTitle} </Text>
+            {revealAnswer ? <Text style={[styles.answer, styles.postPadding]}>{flashCard.back}</Text> : null}
             
             <View style={styles.options}>
                 {
