@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Flashcard } from '@/data/FlashCard';
 import LabelTextInput from '@/components/LabelTextInput';
 import CustomImagePicker from '@/components/CustomImagePicker';
-import { useNavigation } from 'expo-router';
+import { useNavigation, useRouter } from 'expo-router';
 
 const AddCard: React.FC = () => {
     const [front, setFront] = useState('');
@@ -15,15 +15,11 @@ const AddCard: React.FC = () => {
     const tagsRef = useRef(tags);
     const [imageUri, setImageUri] = useState<string | null>(null);
     const imageUriRef = useRef(imageUri);
-    const [option2, setOption2] = useState('');
-    const option2Ref = useRef(option2);
-    const [option3, setOption3] = useState('');
-    const option3Ref = useRef(option3);
-
-    const router = useNavigation();
+    const navigation = useNavigation();
+    const router = useRouter();
 
     useEffect(() => {
-        router.setOptions({
+        navigation.setOptions({
             headerRight: () => (
                 <Text onPress={handleSubmit} style={styles.createCard}>Create</Text>
             ),
@@ -64,7 +60,13 @@ const AddCard: React.FC = () => {
             updateImageUri('');
             Alert.alert(
                 '',
-                'Card created'
+                'Card created',
+                [
+                    {
+                        text: "Take me to my feed.",
+                        onPress: () => router.push('/(tabs)')
+                    }
+                ]
             )
         } catch (error) {
             console.error('Error creating flashcard:', error);
@@ -83,21 +85,15 @@ const AddCard: React.FC = () => {
         tagsRef.current = text;
         setTags(tagsRef.current);
     }
-    const updateImageUri = (text: string) => {
+    const updateImageUri = (text: string | null) => {
         imageUriRef.current = text;
         setImageUri(imageUriRef.current);
     }
-    const updateOption2 = (text: string) => {
-        option2Ref.current = text;
-        setOption2(option2Ref.current);
-    }
-    const updateOption3 = (text: string) => {
-        option3Ref.current = text;
-        setOption3(option3Ref.current);
-    }
 
     return (
-        <ScrollView style={styles.container}>
+        <ScrollView style={styles.container}
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}>
             <LabelTextInput
                 placeholder="Front of flashcard..."
                 value={front}
@@ -120,19 +116,6 @@ const AddCard: React.FC = () => {
                 imageUri={imageUri}
                 setImageUri={updateImageUri}
             />
-
-            <LabelTextInput
-                placeholder="Wrong answer..."
-                value={option2}
-                onChange={updateOption2}
-                label='Option 2'
-            />
-            <LabelTextInput
-                placeholder="Wrong answer..."
-                value={option3}
-                onChange={updateOption3}
-                label='Option 3'
-            />
         </ScrollView>
     );
 };
@@ -140,13 +123,7 @@ const AddCard: React.FC = () => {
 const styles = StyleSheet.create({
     container: {
         paddingHorizontal: 5,
-        margin: 10
-    },
-    input: {
-        borderWidth: 1,
-        borderColor: '#ccc',
-        padding: 10,
-        marginBottom: 10,
+        margin: 8
     },
     createCard: {
         width: 70,

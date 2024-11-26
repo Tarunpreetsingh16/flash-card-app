@@ -1,9 +1,10 @@
+import { FontAwesome } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { Button, Image, ImageBackground, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 interface CustomImagePickerProps {
     imageUri: string | null,
-    setImageUri: (imageUri: string) => void
+    setImageUri: (imageUri: string | null) => void
 }
 
 export default function CustomImagePicker(props: CustomImagePickerProps) {
@@ -32,13 +33,17 @@ export default function CustomImagePicker(props: CustomImagePickerProps) {
 
     return (
         <View style={styles.container}>
+            <View style={styles.labelContainer}>
+                <Text style={styles.text} onPress={selectImage}>Image</Text>
+                {
+                    props.imageUri && <FontAwesome name="window-close" style={styles.icon} onPress={() => props.setImageUri(null)}/>
+                }
+            </View>
             {props.imageUri
                 ? <View>
-                    <Text style={styles.text} onPress={selectImage}>Change image</Text>
-                    <ImageBackground
+                    <Image
                         source={{ uri: props.imageUri }}
-                        style={styles.image}>
-                    </ImageBackground>
+                        style={styles.image} />
                 </View>
                 : <TouchableOpacity onPress={selectImage} style={styles.imageButton}>
                     <Text>Select image</Text>
@@ -50,7 +55,12 @@ export default function CustomImagePicker(props: CustomImagePickerProps) {
 
 const styles = StyleSheet.create({
     container: {
-        marginBottom: 10,
+        width: '100%',
+        marginVertical: 10,
+        backgroundColor: 'white',
+        borderRadius: 10,
+        shadowColor: '#000',
+        elevation: 5,
     },
     image: {
         width: '100%',
@@ -67,12 +77,21 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     text: {
-        color: 'white',
         fontWeight: 'bold',
-        backgroundColor: 'rgba(0, 0, 0, 0.7)',
-        padding: 10,
-        borderTopRightRadius: 5,
-        borderTopLeftRadius: 5,
         width: 150,
+        paddingHorizontal: 20,
+        paddingVertical: 10
     },
+    labelContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignContent: 'center',
+        justifyContent: 'space-between'
+    },
+    icon: {
+        fontSize: 18,
+        paddingHorizontal: 10,
+        color: 'black',
+        alignSelf: 'center'
+    }
 });

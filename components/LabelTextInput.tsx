@@ -23,21 +23,18 @@ export default function LabelTextInput(props: LabelTextInputProps) {
 
 const styles = StyleSheet.create({
     input: {
-        borderWidth: 1,
-        borderColor: '#ccc',
-        padding: 10,
-        marginBottom: 10,
     },
     container: {
-
+        width: '100%',
+        marginVertical: 10,
+        backgroundColor: 'white',
+        borderRadius: 10,
+        shadowColor: '#000',
+        elevation: 5,
+        paddingHorizontal: 20,
+        paddingVertical: 10
     },
     label: {
-        color: 'white',
-        fontWeight: 'bold',
-        backgroundColor: 'rgba(0, 0, 0, 0.7)',
-        padding: 10,
-        borderTopRightRadius: 5,
-        borderTopLeftRadius: 5,
-        width: 150
+        fontWeight: 'bold'
     }
 })

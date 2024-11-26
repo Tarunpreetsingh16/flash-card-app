@@ -16,7 +16,8 @@ const FlashcardList: React.FC = () => {
                 const storedFlashcards = await AsyncStorage.getItem('flashcards');
                 setFlashcards(null);
                 if (storedFlashcards !== null) {
-                    setFlashcards(JSON.parse(storedFlashcards));
+                    const flashcards: Flashcard[] = JSON.parse(storedFlashcards);
+                    setFlashcards(flashcards.reverse());
                 }
             } catch (error) {
                 console.error('Error loading flashcards:', error);
