@@ -44,6 +44,9 @@ const FlashcardList: React.FC = () => {
                         data={flashcards}
                         renderItem={renderItem}
                         keyExtractor={(item) => item.id.toString()}
+                        style={styles.list}
+                        ListFooterComponent={<View style={{ height: 20 }} />} // Adds space below the list
+                        showsVerticalScrollIndicator={false}
                     />
                     : <View style={styles.noCardView}>
                         <Text style={styles.noCardMessage} onPress={routeToCardCreation}>
@@ -56,6 +59,10 @@ const FlashcardList: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
+    list: {
+        paddingVertical: 10,
+        paddingHorizontal: 10
+    },
     noCardView: {
         height: '100%',
         justifyContent: 'center',

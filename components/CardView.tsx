@@ -1,8 +1,8 @@
 import { Flashcard } from "@/data/FlashCard";
-import { Option } from "@/data/Option";
 import { FontAwesome } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
-import { Button, Image, StyleProp, StyleSheet, Text, View, ViewStyle } from "react-native";
+import { Image, Pressable, StyleProp, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View, ViewStyle } from "react-native";
+import Animated, { useAnimatedStyle, useSharedValue, withSpring } from "react-native-reanimated";
 
 interface CardViewData {
     flashCard: Flashcard,
@@ -10,45 +10,61 @@ interface CardViewData {
 }
 
 export default function CardView(cardViewData: CardViewData) {
-    const [revealAnswer, setRevealAnswer] = useState(false);
-    const [buttonTitle, setButtonTitle] = useState('')
+    const rotation = useSharedValue(0); // Initialize rotation
+    const [isFlipped, setIsFlipped] = useState(false);
 
-    useEffect(() => {
-        if (revealAnswer) {
-            setButtonTitle('Hide')
+    const frontStyle = useAnimatedStyle(() => {
+        return {
+            transform: [{ rotateY: `${rotation.value}deg` }]
         }
-        else {
-            setButtonTitle('Reveal')
-        }
+    });
 
-    }, [revealAnswer])
+    const backStyle = useAnimatedStyle(() => {
+        return {
+            transform: [{ rotateY: `${rotation.value + 180}deg` }]
+        }
+    });
+
+    const showBack = () => {
+        rotation.value = withSpring(180);
+        setIsFlipped(true);
+    };
+
+    const showFront = () => {
+        rotation.value = withSpring(0);
+        setIsFlipped(false);
+    };
 
     const { flashCard, style } = cardViewData;
-    
+
     return (
-        <View style={[styles.flashcardItem, style]}>
-            <View style={[styles.profileContainer, styles.postPadding]}>
-                <Image source={{ uri: 'https://hips.hearstapps.com/hmg-prod/images/small-dogs-yorkipoo-6626b45068df9.jpg?crop=0.466xw:0.872xh;0.279xw,0.0204xh&resize=980:*' }}
-                    style={styles.profilePic} />
-                <Text style={styles.username}>jimmy._96</Text>
+
+        <Animated.View style={[styles.flashcardItem, style, !isFlipped ? frontStyle : backStyle]}>
+            <View>
+                <View style={[styles.profileContainer]}>
+                    <Image source={{ uri: 'https://hips.hearstapps.com/hmg-prod/images/small-dogs-yorkipoo-6626b45068df9.jpg?crop=0.466xw:0.872xh;0.279xw,0.0204xh&resize=980:*' }}
+                        style={styles.profilePic} />
+                    <Text style={styles.username}>jimmy._96</Text>
+                </View>
             </View>
-            <Text style={[styles.question, styles.postPadding]}>{flashCard.front}</Text>
+            <Animated.Text style={[styles.questionAndAnswer]}>Q: {flashCard.front}</Animated.Text>
+
             {flashCard.imageUri && flashCard.imageUri.trim().length != 0 ? <Image source={{ uri: flashCard.imageUri }} style={styles.postPicture} /> : null}
-                    
+
             <View style={styles.attributes}>
                 <View style={styles.cardAttributes}>
                     <View style={styles.attributeView}>
                         <FontAwesome name="thumbs-o-up" style={styles.icon} />
                         <Text>{flashCard.likes}</Text>
                     </View>
-                    
+
                     <View style={styles.attributeView}>
                         <FontAwesome name="thumbs-o-down" style={styles.icon} />
                         <Text>{flashCard.dislikes}</Text>
                     </View>
-                    
+
                     <View style={styles.attributeView}>
-                        <FontAwesome name="share-alt" style={styles.icon} />
+                        <FontAwesome name="share" style={styles.icon} />
                         <Text>{flashCard.shares}</Text>
                     </View>
                 </View>
@@ -57,29 +73,42 @@ export default function CardView(cardViewData: CardViewData) {
                     <FontAwesome name="ellipsis-v" style={styles.icon} />
                 </View>
             </View>
-            <Text onPress={() => setRevealAnswer(!revealAnswer)} style={[styles.button, styles.postPadding]}>{buttonTitle} </Text>
-            {revealAnswer ? <Text style={[styles.answer, styles.postPadding]}>{flashCard.back}</Text> : null}
-            
-            <View style={styles.options}>
+            <Pressable style={[styles.cardBottom]}
+                onPress={isFlipped ? showFront : showBack}
+                delayLongPress={500}>
                 {
-                    flashCard.options?.map((option, index) => 
-                        <View style={[styles.option, option.correct ? styles.correctOption : styles.wrongOption]} key={index}>
-                            <Text>{option.text}</Text>
-                            <Text>{option.selectCount}%</Text>
-                        </View>
-                    )
+                    <Text style={styles.flipButton}>FLIP</Text>
                 }
-            </View>
-        </View>
+            </Pressable>
+            
+            {
+                isFlipped
+                && <Animated.Text style={[styles.questionAndAnswer, styles.answer]}>A: {flashCard.back}</Animated.Text>
+            }
+        </Animated.View>
     )
 }
 
 const styles = StyleSheet.create({
     flashcardItem: {
-        marginVertical: 20,
+        marginVertical: 3,
+        padding: 10,
+        width: '100%',
+        backgroundColor: 'white',
+        shadowColor: '#000',
     },
-    question: {
-        fontSize: 20
+    questionAndAnswer: {
+        fontSize: 20,
+        backgroundColor: '#fff',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 10,
+        backfaceVisibility: 'hidden',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 5,
+        marginVertical: 5
     },
     profileContainer: {
         display: 'flex',
@@ -137,16 +166,14 @@ const styles = StyleSheet.create({
         width: '100%',
         aspectRatio: 1
     },
-    postPadding: {
-        paddingHorizontal: 15
-    },
+
     options: {
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-evenly',
         marginTop: 10
     },
-    option: { 
+    option: {
         width: '30%',
         display: 'flex',
         flexDirection: 'column',
@@ -163,5 +190,14 @@ const styles = StyleSheet.create({
     wrongOption: {
         borderColor: '#F04848',
         backgroundColor: '#F19696',
+    },
+    flipButton: {
+        alignSelf: 'center',
+        color: '#4682B4',
+        textTransform: 'uppercase',
+        fontWeight: 500
+    },
+    cardBottom: {
+        padding: 10,
     }
 });

@@ -58,9 +58,8 @@ const styles = StyleSheet.create({
         width: '100%',
         marginVertical: 10,
         backgroundColor: 'white',
-        borderRadius: 10,
         shadowColor: '#000',
-        elevation: 5,
+        elevation: 3,
     },
     image: {
         width: '100%',
