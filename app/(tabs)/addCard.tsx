@@ -1,5 +1,5 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { View, TextInput, Button, StyleSheet, TouchableOpacity, ScrollView, Text, Alert } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { StyleSheet, ScrollView, Text, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Flashcard } from '@/data/FlashCard';
 import LabelTextInput from '@/components/LabelTextInput';
@@ -21,7 +21,7 @@ const AddCard: React.FC = () => {
     useEffect(() => {
         navigation.setOptions({
             headerRight: () => (
-                <Text onPress={handleSubmit} style={styles.createCard}>Create</Text>
+                <Text onPress={handleSubmit} style={styles.createCard} allowFontScaling={true}>Create</Text>
             ),
         });
     }, []);
@@ -43,6 +43,7 @@ const AddCard: React.FC = () => {
 
             const newFlashcard: Flashcard = new Flashcard(
                 flashcards.length > 0 ? flashcards[flashcards.length - 1].id + 1 : 1,
+                0,
                 frontRef.current,
                 backRef.current,
                 tagList,

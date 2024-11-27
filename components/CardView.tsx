@@ -48,7 +48,10 @@ export default function CardView(cardViewData: CardViewData) {
                 </View>
             </View>
             <Animated.Text style={[styles.questionAndAnswer]}>Q: {flashCard.front}</Animated.Text>
-
+            {
+                isFlipped
+                && <Animated.Text style={[styles.questionAndAnswer, styles.answer]}>A: {flashCard.back}</Animated.Text>
+            }
             {flashCard.imageUri && flashCard.imageUri.trim().length != 0 ? <Image source={{ uri: flashCard.imageUri }} style={styles.postPicture} /> : null}
 
             <View style={styles.attributes}>
@@ -80,11 +83,6 @@ export default function CardView(cardViewData: CardViewData) {
                     <Text style={styles.flipButton}>FLIP</Text>
                 }
             </Pressable>
-            
-            {
-                isFlipped
-                && <Animated.Text style={[styles.questionAndAnswer, styles.answer]}>A: {flashCard.back}</Animated.Text>
-            }
         </Animated.View>
     )
 }
@@ -98,7 +96,7 @@ const styles = StyleSheet.create({
         shadowColor: '#000',
     },
     questionAndAnswer: {
-        fontSize: 20,
+        fontSize: 16,
         backgroundColor: '#fff',
         justifyContent: 'center',
         alignItems: 'center',
@@ -129,7 +127,6 @@ const styles = StyleSheet.create({
     },
     answer: {
         fontStyle: 'italic',
-        fontSize: 16
     },
     attributes: {
         display: 'flex',

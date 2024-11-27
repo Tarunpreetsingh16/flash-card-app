@@ -2,6 +2,7 @@ import { Option } from "./Option";
 
 export class Flashcard {
     id: number;
+    userId: number;
     front: string;
     back: string;
     tags: string[];
@@ -11,8 +12,9 @@ export class Flashcard {
     dislikes?: number = 0;
     shares?: number = 0;
 
-    constructor(id: number, front: string, back: string, tags: string[], imageUri: string | null, options?: Option[], likes?: number, dislikes?: number, shares?: number) {
+    constructor(id: number, userId: number, front: string, back: string, tags: string[], imageUri: string | null, options?: Option[], likes?: number, dislikes?: number, shares?: number) {
         this.id = id;
+        this.userId = userId;
         this.front = front;
         this.back = back;
         this.tags = [...tags];

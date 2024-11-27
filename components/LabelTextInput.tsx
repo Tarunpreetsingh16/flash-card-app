@@ -12,7 +12,7 @@ export default function LabelTextInput(props: LabelTextInputProps) {
     return (
         <View style={styles.container}>
             <Text style={styles.label}>{props.label}</Text>
-            <TextInput
+            <TextInput allowFontScaling
                 style={styles.input}
                 value={props.value}
                 onChangeText={props.onChange}
