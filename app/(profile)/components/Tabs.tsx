@@ -1,12 +1,13 @@
 
 import { FontAwesome } from '@expo/vector-icons';
 import * as React from 'react';
-import { StyleSheet, Text, View, useWindowDimensions } from 'react-native';
+import { ScrollView, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 import { TabView, SceneMap, TabBar, SceneRendererProps, NavigationState } from 'react-native-tab-view';
+import UserCards from './Tabs/UserCards';
 
 const CardsRoute = () => (
     <View style={[styles.scene]}>
-        <Text>First Tab Content</Text>
+        <UserCards />
     </View>
 );
 
@@ -31,7 +32,7 @@ const renderScene = SceneMap({
 });
 
 const routes = [
-    { key: 'cardsRoute', title: 'Cards', icon: 'cog' },
+    { key: 'cardsRoute', title: 'Cards' },
     { key: 'categoriesRoute', title: 'Categories' },
     { key: 'collectionRoute', title: 'Collections' },
 ];
@@ -51,7 +52,6 @@ export default function TabViewExample() {
                     {...props}
                     style={[styles.tabBar]} // Tab bar background color
                     indicatorStyle={[styles.indicator]} // Active tab indicator color
-                    labelStyle={{ color: "grey" }}
                 />
             )}
 
@@ -60,25 +60,13 @@ export default function TabViewExample() {
 }
 
 const styles = StyleSheet.create({
-    // scene: {
-    //     flex: 1,
-    //     justifyContent: "center",
-    //     alignItems: "center",
-    // },
     tabBar: {
-        borderWidth: 1,
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-evenly',
-        alignItems: 'center'
-    },
-    tabItem: {
-        borderWidth: 1,
+        backgroundColor: '#5F7470'
     },
     indicator: {
         backgroundColor: "white",
         height: 5,
         borderTopRightRadius: 10,
         borderTopLeftRadius: 10,
-    }
+    },
 });

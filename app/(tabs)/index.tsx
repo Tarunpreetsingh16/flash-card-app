@@ -26,7 +26,6 @@ const FlashcardList: React.FC = () => {
                 console.error('Error loading flashcards:', error);
             }
         };
-
         loadFlashcards();
     }, []));
 

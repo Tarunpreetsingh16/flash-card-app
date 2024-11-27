@@ -18,7 +18,7 @@ const CardList = (props: CardListProps) => {
         <FlatList
             data={flashcards}
             renderItem={renderItem}
-            keyExtractor={(item) => item.id.toString()}
+            keyExtractor={(_, index) => index.toString()}
             style={styles.list}
             ListFooterComponent={<View style={{ height: 20 }} />} // Adds space below the list
             showsVerticalScrollIndicator={false}
