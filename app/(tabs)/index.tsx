@@ -3,7 +3,6 @@ import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect, useNavigation, useRouter } from 'expo-router';
 import { Flashcard } from '@/data/FlashCard';
-import CardView from '@/components/CardView';
 import CardList from '@/components/CardList';
 
 
@@ -20,7 +19,7 @@ const FlashcardList: React.FC = () => {
                 setFlashcards(null);
                 if (storedFlashcards !== null) {
                     let flashcards: Flashcard[] = JSON.parse(storedFlashcards);
-                    flashcards = flashcards.filter((card) => card.userId != userId);
+                    // flashcards = flashcards.filter((card) => card.userId != userId);
                     setFlashcards(flashcards.reverse());
                 }
             } catch (error) {
@@ -29,7 +28,6 @@ const FlashcardList: React.FC = () => {
         };
 
         loadFlashcards();
-
     }, []));
 
     useEffect(() => {
@@ -52,10 +50,6 @@ const FlashcardList: React.FC = () => {
     const routeToCardCreation = () => {
         router.push('/(tabs)/addCard');
     }
-
-    const renderItem = ({ item }: { item: Flashcard }) => (
-        <CardView flashCard={item} />
-    );
 
     return (
         <>
