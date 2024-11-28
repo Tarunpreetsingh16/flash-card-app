@@ -15,16 +15,17 @@ export default function UserCards() {
                 const storedFlashcards = await AsyncStorage.getItem('flashcards');
                 setFlashcards(null);
                 if (storedFlashcards != null) {
-                    let flashcards: Flashcard[] = JSON.parse(storedFlashcards);
-                    flashcards = flashcards.filter((card) => card.userId == userId);
-                    setFlashcards(flashcards.length > 0 ? flashcards.reverse() : null);
+                    let flashcardsFromStorage: Flashcard[] = JSON.parse(storedFlashcards);
+                    flashcardsFromStorage = flashcardsFromStorage.filter((card) => card.userId == userId);
+                    setFlashcards(flashcardsFromStorage.length > 0 ? flashcardsFromStorage.reverse() : null);
                 }
             } catch (error) {
                 console.error('Error loading flashcards:', error);
             }
         };
+
         loadFlashcards();
-    })
+    }, [])
 
     return (
         <>
@@ -42,7 +43,7 @@ export default function UserCards() {
 }
 
 const styles = StyleSheet.create({
-        noCardView: {
+    noCardView: {
         height: '100%',
         justifyContent: 'center',
         alignSelf: 'center',

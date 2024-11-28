@@ -1,11 +1,10 @@
-import { useNavigation } from "expo-router";
-import { useEffect } from "react";
-import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import {  } from "expo-router";
+import {  } from "react";
+import { StyleSheet, View } from "react-native";
 import ProfileHeader from "./components/ProfileHeader";
 import TabScreen from "./components/Tabs";
 
 export default function ProfileScreen() {
-    const navigation = useNavigation();
 
     return (
         <View style={styles.container}>

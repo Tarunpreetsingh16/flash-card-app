@@ -1,14 +1,11 @@
 
-import { FontAwesome } from '@expo/vector-icons';
 import * as React from 'react';
 import { ScrollView, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 import { TabView, SceneMap, TabBar, SceneRendererProps, NavigationState } from 'react-native-tab-view';
 import UserCards from './Tabs/UserCards';
 
 const CardsRoute = () => (
-    <View style={[styles.scene]}>
-        <UserCards />
-    </View>
+    <UserCards />
 );
 
 const CategoriesRoute = () => (
@@ -17,24 +14,14 @@ const CategoriesRoute = () => (
     </View>
 )
 
-const CollectionRoute = () => (
-    <View style={[styles.scene]}>
-        <Text>Second Tab Content</Text>
-    </View>
-)
-
-
-
 const renderScene = SceneMap({
     cardsRoute: CardsRoute,
     categoriesRoute: CategoriesRoute,
-    collectionRoute: CollectionRoute
 });
 
 const routes = [
     { key: 'cardsRoute', title: 'Cards' },
     { key: 'categoriesRoute', title: 'Categories' },
-    { key: 'collectionRoute', title: 'Collections' },
 ];
 
 export default function TabViewExample() {

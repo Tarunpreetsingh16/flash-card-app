@@ -43,17 +43,17 @@ const AddCard: React.FC = () => {
 
             const newFlashcard: Flashcard = new Flashcard(
                 flashcards.length > 0 ? flashcards[flashcards.length - 1].id + 1 : 1,
-                0,
+                1,
                 frontRef.current,
                 backRef.current,
                 tagList,
-                imageUriRef.current
+                imageUriRef.current,
+                false
             );
 
             flashcards.push(newFlashcard);
 
             await AsyncStorage.setItem('flashcards', JSON.stringify(flashcards));
-            console.log("Added a flashcard to storage!")
 
             updateFront('');
             updateBack('');
