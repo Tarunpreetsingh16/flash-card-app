@@ -27,7 +27,6 @@ const CardList = (props: CardListProps) => {
     useFocusEffect(React.useCallback(() => {
         return () => bottomSheetRef.current?.close();
     }, []));
-
     return (
         <GestureHandlerRootView style={{ flex: 1 }}>
             <FlatList

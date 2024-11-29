@@ -1,13 +1,13 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { StyleSheet, ScrollView, Text, Alert } from 'react-native';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { StyleSheet, ScrollView, Text, Alert, Button, Pressable, TouchableOpacity, Vibration } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Flashcard } from '@/data/FlashCard';
 import LabelTextInput from '@/components/LabelTextInput';
-import CustomImagePicker from '@/components/CustomImagePicker';
 import { useNavigation, useRouter } from 'expo-router';
 import CustomSwitch from '@/components/CustomLabelSwitch';
+import { useSearchParams } from 'expo-router/build/hooks';
 
-const AddCard: React.FC = () => {
+const UpdateCard: React.FC = () => {
     const getFlashcard = () => {
         const newFlashcard: Flashcard = new Flashcard(
             0,
@@ -21,16 +21,32 @@ const AddCard: React.FC = () => {
 
         return newFlashcard;
     }
-
-
+    const params = useSearchParams();
+    const flashcardTobeEditedString = params.get('flashcard');
     const [flashcard, setFlashcard] = useState(getFlashcard());
-    const flashcardRef = useRef(flashcard);
 
-    const navigation = useNavigation();
     const router = useRouter();
 
+    useEffect(() => {
+        if (!flashcardTobeEditedString) {
+            Alert.alert(
+                "",
+                "No card found to be edited",
+                [
+                    {
+                        text: "Take me to my feed.",
+                        onPress: () => router.push('/(tabs)'),
+                    },
+                ]
+            );
+        } else {
+            setFlashcard(JSON.parse(flashcardTobeEditedString));
+        }
+    }, [flashcardTobeEditedString]);
+
     const handleSubmit = async () => {
-        if (!flashcardRef.current.front || !flashcardRef.current.back) {
+        Vibration.vibrate(10);
+        if (flashcard.front.length <= 0 || flashcard.back.length <= 0) {
             Alert.alert(
                 '',
                 'Please fill all the fields'
@@ -43,21 +59,14 @@ const AddCard: React.FC = () => {
             const existingFlashcards = await AsyncStorage.getItem('flashcards') || '[]';
             const flashcards: Flashcard[] = JSON.parse(existingFlashcards);
 
-            const newFlashcard: Flashcard = new Flashcard(
-                flashcards.length > 0 ? flashcards[flashcards.length - 1].id + 1 : 1,
-                0,
-                flashcardRef.current.front,
-                flashcardRef.current.back,
-                flashcardRef.current.tags,
-                flashcardRef.current.imageUri,
-                flashcardRef.current.isPrivate
-            );
-
-            flashcards.push(newFlashcard);
-
+            for (let i = 0; i < flashcards.length; i++) {
+                if (flashcards[i].id === flashcard.id) {
+                    flashcards[i] = {...flashcard};
+                    flashcards[i].imageUri = flashcard.imageUri ? decodeURIComponent(flashcard.imageUri) : null;
+                }
+            }
             await AsyncStorage.setItem('flashcards', JSON.stringify(flashcards));
 
-            updateFlashcard();
             Alert.alert(
                 '',
                 'Card created',
@@ -69,43 +78,28 @@ const AddCard: React.FC = () => {
                 ]
             )
         } catch (error) {
-            console.error('Error creating flashcard:', error);
+            console.error('Error updating flashcard:', error);
         }
     };
-    
+
     const updateFront = (front: string) => {
         const updatedCard = { ...flashcard, front };
-        flashcardRef.current = updatedCard;
         setFlashcard(updatedCard);
     }
 
     const updateBack = (back: string) => {
         const updatedCard = { ...flashcard, back };
-        flashcardRef.current = updatedCard;
-        setFlashcard(updatedCard);
-    }
-
-    const updateImageUri = (imageUri: string | null) => {
-        const updatedCard = { ...flashcard, imageUri };
-        flashcardRef.current = updatedCard;
         setFlashcard(updatedCard);
     }
 
     const updateIsPrivate = (isPrivate: boolean) => {
         const updatedCard = { ...flashcard, isPrivate };
-        flashcardRef.current = updatedCard;
         setFlashcard(updatedCard);
     }
 
     const updateTags = (tags: string) => {
         const updatedCard = { ...flashcard, tags: tags.trim().split(',') };
-        flashcardRef.current = updatedCard;
-        setFlashcard(updatedCard); 
-    }
-
-    const updateFlashcard = () => {
-        flashcardRef.current = getFlashcard();
-        setFlashcard(flashcardRef.current);
+        setFlashcard(updatedCard);
     }
 
     return (
@@ -131,11 +125,7 @@ const AddCard: React.FC = () => {
                 label='Tags'
             />
             <CustomSwitch isSwitchOn={flashcard.isPrivate} onSwitchToggle={updateIsPrivate} />
-            <CustomImagePicker
-                imageUri={flashcard.imageUri}
-                setImageUri={updateImageUri}
-            />
-            <Text onPress={handleSubmit} style={styles.createCard} allowFontScaling={true}>Create</Text>
+            <Text onPress={handleSubmit} style={styles.createCard} allowFontScaling={true}>Update</Text>
         </ScrollView>
     );
 };
@@ -149,10 +139,8 @@ const styles = StyleSheet.create({
         width: 70,
         color: '#4682B4',
         textTransform: 'uppercase',
-        fontWeight: 500,
+        fontWeight: 500,    
         alignSelf: 'center',
-        marginVertical: 50
-    }
+        marginVertical: 50}
 });
-
-export default AddCard;
+export default UpdateCard;

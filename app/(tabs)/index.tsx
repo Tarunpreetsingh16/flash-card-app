@@ -10,8 +10,6 @@ const FlashcardList: React.FC = () => {
     const [flashcards, setFlashcards] = useState<Flashcard[] | null>(null);
     const router = useRouter();
     const navigation = useNavigation();
-    const userId = 0;
-
     useFocusEffect(React.useCallback(() => {
         const loadFlashcards = async () => {
             try {

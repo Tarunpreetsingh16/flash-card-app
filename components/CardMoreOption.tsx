@@ -1,10 +1,11 @@
 import { Flashcard } from "@/data/FlashCard";
 import BottomSheet from "@gorhom/bottom-sheet";
-import { RefObject } from "react";
+import { RefObject, useState } from "react";
 import BottomSheetComponent from "./BottomSheet";
 import { Alert, StyleSheet, Text, View } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import { useRouter } from "expo-router";
 
 type CardMoreOptionsProps = {
     selectedCard: Flashcard | null;
@@ -13,15 +14,25 @@ type CardMoreOptionsProps = {
 };
 
 export default function CardMoreOptions({ selectedCard, bottomSheetRef, closeBottomSheet }: CardMoreOptionsProps) {
+    const router = useRouter();
+
+    const routeToUpdateScreen = () => {
+        router.push({
+            pathname: `/(cardManipulation)/updateCard`,
+            params: {
+                flashcard: JSON.stringify(selectedCard)
+            }
+        })
+    }
 
     const userCardOptions = () => {
         return (
             <>
-                <OptionIconLabel label="Edit" onPress={}>
+                <OptionIconLabel label="Edit" onPress={routeToUpdateScreen}>
                     <FontAwesome name="pencil" style={[styles.icon]} />
                 </OptionIconLabel>
 
-                <OptionIconLabel label="Delete">
+                <OptionIconLabel label="Delete" onPress={routeToUpdateScreen}>
                     <FontAwesome name="trash" style={[styles.icon]} color={'red'} />
                 </OptionIconLabel>
             </>
@@ -30,10 +41,10 @@ export default function CardMoreOptions({ selectedCard, bottomSheetRef, closeBot
     const othersCardOptions = () => {
         return (
             <>
-                <OptionIconLabel label="Follow account">
+                <OptionIconLabel label="Follow account" onPress={routeToUpdateScreen}>
                     <FontAwesome name="user-plus" style={[styles.icon]} />
                 </OptionIconLabel>
-                <OptionIconLabel label="Report">
+                <OptionIconLabel label="Report" onPress={routeToUpdateScreen}>
                     <FontAwesome name="flag" style={[styles.icon]} color={'red'} />
                 </OptionIconLabel>
             </>
@@ -57,9 +68,9 @@ type OptionIconLabelProps = {
     onPress: () => void
 }
 
-const OptionIconLabel = ({ label, children }: OptionIconLabelProps) => {
+const OptionIconLabel = ({ label, children, onPress }: OptionIconLabelProps) => {
     return (
-        <TouchableWithoutFeedback style={[styles.optionContainer]} onPress={() => }>
+        <TouchableWithoutFeedback style={[styles.optionContainer]} onPress={onPress}>
             {children}
             <Text style={[styles.label]}>{label}</Text>
         </TouchableWithoutFeedback>

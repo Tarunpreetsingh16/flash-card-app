@@ -1,7 +1,7 @@
 import { Flashcard } from "@/data/FlashCard";
 import { FontAwesome } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
-import { Button, Image, Pressable, StyleProp, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View, ViewStyle } from "react-native";
+import { Button, Image, Pressable, StyleProp, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, Vibration, View, ViewStyle } from "react-native";
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from "react-native-reanimated";
 
 interface CardViewData {
@@ -38,12 +38,11 @@ export default function CardView(cardViewData: CardViewData) {
     };
 
     const triggerOpen = () => {
+        Vibration.vibrate(1)
         cardViewData.openMoreOptions();
     }
 
     const { flashCard, style } = cardViewData;
-
-    console.log({ flashCard })
 
     return (
 
