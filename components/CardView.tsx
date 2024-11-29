@@ -43,6 +43,8 @@ export default function CardView(cardViewData: CardViewData) {
 
     const { flashCard, style } = cardViewData;
 
+    console.log({ flashCard })
+
     return (
 
         <View style={[styles.flashcardItem]} >
@@ -52,7 +54,10 @@ export default function CardView(cardViewData: CardViewData) {
                         style={styles.profilePic} />
                     <Text style={styles.username}>jimmy._96</Text>
                 </View>
-                <FontAwesome name="ellipsis-v" style={[styles.icon, styles.ellipses]} onPress={triggerOpen} />
+                <View style={styles.cardHeaderRight}>
+                    {flashCard.isPrivate && <FontAwesome name="lock" style={[styles.icon]} />}
+                    <FontAwesome name="ellipsis-v" style={[styles.icon, styles.ellipses]} onPress={triggerOpen} />
+                </View>
             </View>
             <Animated.View style={[styles.flashcardItem, styles.mainContent, style, !isFlipped ? frontStyle : backStyle, { pointerEvents: 'box-none' }]} >
                 <Text style={[styles.questionAndAnswer]}>Q: {flashCard.front}</Text>
@@ -219,5 +224,9 @@ const styles = StyleSheet.create({
     },
     ellipses: {
         alignSelf: 'center',
+    },
+    cardHeaderRight: {
+        display: 'flex',
+        flexDirection: 'row'
     }
 });

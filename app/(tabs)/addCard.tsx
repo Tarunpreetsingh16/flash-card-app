@@ -5,6 +5,7 @@ import { Flashcard } from '@/data/FlashCard';
 import LabelTextInput from '@/components/LabelTextInput';
 import CustomImagePicker from '@/components/CustomImagePicker';
 import { useNavigation, useRouter } from 'expo-router';
+import CustomSwitch from '@/components/CustomLabelSwitch';
 
 const AddCard: React.FC = () => {
     const [front, setFront] = useState('');
@@ -15,6 +16,8 @@ const AddCard: React.FC = () => {
     const tagsRef = useRef(tags);
     const [imageUri, setImageUri] = useState<string | null>(null);
     const imageUriRef = useRef(imageUri);
+    const [isPrivate, setIsPrivate] = useState(false);
+    const isPrivateRef = useRef(isPrivate);
     const navigation = useNavigation();
     const router = useRouter();
 
@@ -43,12 +46,12 @@ const AddCard: React.FC = () => {
 
             const newFlashcard: Flashcard = new Flashcard(
                 flashcards.length > 0 ? flashcards[flashcards.length - 1].id + 1 : 1,
-                1,
+                0,
                 frontRef.current,
                 backRef.current,
                 tagList,
                 imageUriRef.current,
-                false
+                isPrivateRef.current
             );
 
             flashcards.push(newFlashcard);
@@ -59,6 +62,7 @@ const AddCard: React.FC = () => {
             updateBack('');
             updateTags('');
             updateImageUri('');
+            updateIsPrivate(false);
             Alert.alert(
                 '',
                 'Card created',
@@ -90,6 +94,10 @@ const AddCard: React.FC = () => {
         imageUriRef.current = text;
         setImageUri(imageUriRef.current);
     }
+    const updateIsPrivate = (isPrivate: boolean) => {
+        isPrivateRef.current = isPrivate;
+        setIsPrivate(isPrivateRef.current);
+    }
 
     return (
         <ScrollView style={styles.container}
@@ -113,6 +121,7 @@ const AddCard: React.FC = () => {
                 onChange={updateTags}
                 label='Tags'
             />
+            <CustomSwitch isSwitchOn={isPrivate} onSwitchToggle={updateIsPrivate}/>
             <CustomImagePicker
                 imageUri={imageUri}
                 setImageUri={updateImageUri}

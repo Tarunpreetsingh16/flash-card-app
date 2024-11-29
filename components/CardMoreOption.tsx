@@ -2,7 +2,7 @@ import { Flashcard } from "@/data/FlashCard";
 import BottomSheet from "@gorhom/bottom-sheet";
 import { RefObject } from "react";
 import BottomSheetComponent from "./BottomSheet";
-import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Alert, StyleSheet, Text, View } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 
@@ -17,7 +17,7 @@ export default function CardMoreOptions({ selectedCard, bottomSheetRef, closeBot
     const userCardOptions = () => {
         return (
             <>
-                <OptionIconLabel label="Edit">
+                <OptionIconLabel label="Edit" onPress={}>
                     <FontAwesome name="pencil" style={[styles.icon]} />
                 </OptionIconLabel>
 
@@ -53,12 +53,13 @@ export default function CardMoreOptions({ selectedCard, bottomSheetRef, closeBot
 
 type OptionIconLabelProps = {
     label: string;
-    children: React.ReactNode
+    children: React.ReactNode;
+    onPress: () => void
 }
 
 const OptionIconLabel = ({ label, children }: OptionIconLabelProps) => {
     return (
-        <TouchableWithoutFeedback style={[styles.optionContainer]} onPress={() => Alert.alert(label)}>
+        <TouchableWithoutFeedback style={[styles.optionContainer]} onPress={() => }>
             {children}
             <Text style={[styles.label]}>{label}</Text>
         </TouchableWithoutFeedback>
