@@ -6,6 +6,7 @@ import { Alert, StyleSheet, Text, View } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import { useRouter } from "expo-router";
+import FlashcardUtility from "@/utils/FlashcardUtility";
 
 type CardMoreOptionsProps = {
     selectedCard: Flashcard | null;
@@ -25,6 +26,12 @@ export default function CardMoreOptions({ selectedCard, bottomSheetRef, closeBot
         })
     }
 
+    const deleteCard = async () => {
+        if (selectedCard) {
+            await FlashcardUtility.deleteCard(selectedCard.id);
+        }
+    }
+
     const userCardOptions = () => {
         return (
             <>
@@ -32,7 +39,7 @@ export default function CardMoreOptions({ selectedCard, bottomSheetRef, closeBot
                     <FontAwesome name="pencil" style={[styles.icon]} />
                 </OptionIconLabel>
 
-                <OptionIconLabel label="Delete" onPress={routeToUpdateScreen}>
+                <OptionIconLabel label="Delete" onPress={deleteCard}>
                     <FontAwesome name="trash" style={[styles.icon]} color={'red'} />
                 </OptionIconLabel>
             </>

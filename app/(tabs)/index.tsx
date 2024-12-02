@@ -1,40 +1,38 @@
 import React, { useEffect, useState } from 'react';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useFocusEffect, useNavigation, useRouter } from 'expo-router';
-import { Flashcard } from '@/data/FlashCard';
+import { useNavigation, useRouter } from 'expo-router';
 import CardList from '@/components/CardList';
+import FlashcardUtility from '@/utils/FlashcardUtility';
+import { useAppDispatch } from '@/hooks/useAppDispatch';
+import { setFlashcards } from '@/store/reducers/flashcardSlice';
+import { useAppSelector } from '@/hooks/useAppSelector';
+import { RootState } from '@/store';
 
 
 const FlashcardList: React.FC = () => {
-    const [flashcards, setFlashcards] = useState<Flashcard[] | null>(null);
     const router = useRouter();
     const navigation = useNavigation();
-    useFocusEffect(React.useCallback(() => {
+    const dispatch = useAppDispatch();
+    const flashcards = useAppSelector((state: RootState) => state.flashcards.flashcards)
+
+    useEffect(() => {
         const loadFlashcards = async () => {
-            try {
-                const storedFlashcards = await AsyncStorage.getItem('flashcards');
-                setFlashcards(null);
-                if (storedFlashcards !== null) {
-                    let flashcards: Flashcard[] = JSON.parse(storedFlashcards);
-                    // flashcards = flashcards.filter((card) => card.userId != userId);
-                    setFlashcards(flashcards.reverse());
-                }
-            } catch (error) {
-                console.error('Error loading flashcards:', error);
+            const storedFlashcards = await FlashcardUtility.loadFlashcards()
+            if (storedFlashcards) {
+                dispatch(setFlashcards(storedFlashcards));
             }
         };
         loadFlashcards();
-    }, []));
+    }, [dispatch])
 
     useEffect(() => {
         navigation.setOptions({
             headerRight: () => (
                 <Pressable style={[styles.profileContainer]}
-                onPress={routeToProfile}>
+                    onPress={routeToProfile}>
                     <Image source={{ uri: 'https://hips.hearstapps.com/hmg-prod/images/small-dogs-yorkipoo-6626b45068df9.jpg?crop=0.466xw:0.872xh;0.279xw,0.0204xh&resize=980:*' }}
-                        style={styles.profilePic} 
-                        />
+                        style={styles.profilePic}
+                    />
                 </Pressable>
             ),
         });
@@ -52,7 +50,7 @@ const FlashcardList: React.FC = () => {
         <>
             {
                 flashcards
-                    ? <CardList flashcards={flashcards}/>
+                    ? <CardList flashcards={flashcards} />
                     : <View style={styles.noCardView}>
                         <Text style={styles.noCardMessage} onPress={routeToCardCreation}>
                             Let's create my first card!

@@ -6,6 +6,10 @@ import LabelTextInput from '@/components/LabelTextInput';
 import { useNavigation, useRouter } from 'expo-router';
 import CustomSwitch from '@/components/CustomLabelSwitch';
 import { useSearchParams } from 'expo-router/build/hooks';
+import FlashcardUtility from '@/utils/FlashcardUtility';
+import { useDispatch } from 'react-redux';
+import { useAppSelector } from '@/hooks/useAppSelector';
+import { RootState } from '@/store';
 
 const UpdateCard: React.FC = () => {
     const getFlashcard = () => {
@@ -24,10 +28,12 @@ const UpdateCard: React.FC = () => {
     const params = useSearchParams();
     const flashcardTobeEditedString = params.get('flashcard');
     const [flashcard, setFlashcard] = useState(getFlashcard());
+    const flashcards = useAppSelector((state: RootState) => state.flashcards.flashcards)
 
     const router = useRouter();
 
     useEffect(() => {
+
         if (!flashcardTobeEditedString) {
             Alert.alert(
                 "",
@@ -42,11 +48,13 @@ const UpdateCard: React.FC = () => {
         } else {
             setFlashcard(JSON.parse(flashcardTobeEditedString));
         }
+
     }, [flashcardTobeEditedString]);
+    console.log("Updated Card Image URI outside", flashcard);
 
     const handleSubmit = async () => {
         Vibration.vibrate(10);
-        if (flashcard.front.length <= 0 || flashcard.back.length <= 0) {
+        if (flashcard.front.trim().length <= 0 || flashcard.back.trim().length <= 0) {
             Alert.alert(
                 '',
                 'Please fill all the fields'
@@ -55,28 +63,16 @@ const UpdateCard: React.FC = () => {
         }
 
         try {
-
-            const existingFlashcards = await AsyncStorage.getItem('flashcards') || '[]';
-            const flashcards: Flashcard[] = JSON.parse(existingFlashcards);
-
             for (let i = 0; i < flashcards.length; i++) {
                 if (flashcards[i].id === flashcard.id) {
-                    flashcards[i] = {...flashcard};
-                    flashcards[i].imageUri = flashcard.imageUri ? decodeURIComponent(flashcard.imageUri) : null;
+                    flashcards[i] = { ...flashcard };
+                    flashcards[i].imageUri = flashcard.imageUri ? encodeURI(flashcard.imageUri) : null;
                 }
             }
-            await AsyncStorage.setItem('flashcards', JSON.stringify(flashcards));
+            await FlashcardUtility.saveCards(flashcards);
 
-            Alert.alert(
-                '',
-                'Card created',
-                [
-                    {
-                        text: "Take me to my feed.",
-                        onPress: () => router.push('/(tabs)')
-                    }
-                ]
-            )
+
+            router.back();
         } catch (error) {
             console.error('Error updating flashcard:', error);
         }
@@ -139,8 +135,9 @@ const styles = StyleSheet.create({
         width: 70,
         color: '#4682B4',
         textTransform: 'uppercase',
-        fontWeight: 500,    
+        fontWeight: 500,
         alignSelf: 'center',
-        marginVertical: 50}
+        marginVertical: 50
+    }
 });
 export default UpdateCard;

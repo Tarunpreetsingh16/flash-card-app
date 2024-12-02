@@ -1,37 +1,38 @@
 import CardList from "@/components/CardList";
-import { Flashcard } from "@/data/FlashCard";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useEffect, useState } from "react";
+import { useAppSelector } from "@/hooks/useAppSelector";
+import { RootState } from "@/store";
+import FlashcardUtility from "@/utils/FlashcardUtility";
+import { useFocusEffect } from "expo-router";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
 
 export default function UserCards() {
-    const [flashcards, setFlashcards] = useState<Flashcard[] | null>(null);
     const userId = 0;
+    const flashcards = useAppSelector((state: RootState) => state.flashcards.flashcards)
+    const [userFlashcards, setUserFlashcards] = useState(flashcards);
 
     useEffect(() => {
-        const loadFlashcards = async () => {
-            try {
-                const storedFlashcards = await AsyncStorage.getItem('flashcards');
-                setFlashcards(null);
-                if (storedFlashcards != null) {
-                    let flashcardsFromStorage: Flashcard[] = JSON.parse(storedFlashcards);
-                    flashcardsFromStorage = flashcardsFromStorage.filter((card) => card.userId == userId);
-                    setFlashcards(flashcardsFromStorage.length > 0 ? flashcardsFromStorage.reverse() : null);
-                }
-            } catch (error) {
-                console.error('Error loading flashcards:', error);
-            }
-        };
+        if (flashcards) {
+            const filteredFlashcards = flashcards.filter((card) => card.userId == userId);
+            setUserFlashcards(filteredFlashcards.reverse());
+        }
+    }, [flashcards])
 
-        loadFlashcards();
-    }, [])
-
+    // useFocusEffect(React.useCallback(() => {
+    //     const loadFlashcards = async () => {
+    //         const storedFlashcards = await FlashcardUtility.loadFlashcards();
+    //         if (storedFlashcards != null) {
+    //             let flashcardsFromStorage = storedFlashcards.filter((card) => card.userId == userId);
+    //             setFlashcards(flashcardsFromStorage.length > 0 ? flashcardsFromStorage.reverse() : null);
+    //         }
+    //     };
+    //     loadFlashcards();
+    // }, []));
     return (
         <>
             {
                 flashcards
-                    ? <CardList flashcards={flashcards} />
+                    ? <CardList flashcards={userFlashcards} />
                     : <View style={styles.noCardView}>
                         <Text style={styles.noCardMessage}>
                             Let's create my first card!

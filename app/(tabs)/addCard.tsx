@@ -6,6 +6,7 @@ import LabelTextInput from '@/components/LabelTextInput';
 import CustomImagePicker from '@/components/CustomImagePicker';
 import { useNavigation, useRouter } from 'expo-router';
 import CustomSwitch from '@/components/CustomLabelSwitch';
+import FlashcardUtility from '@/utils/FlashcardUtility';
 
 const AddCard: React.FC = () => {
     const getFlashcard = () => {
@@ -55,7 +56,7 @@ const AddCard: React.FC = () => {
 
             flashcards.push(newFlashcard);
 
-            await AsyncStorage.setItem('flashcards', JSON.stringify(flashcards));
+            await FlashcardUtility.saveCards(flashcards);
 
             updateFlashcard();
             Alert.alert(
@@ -72,7 +73,7 @@ const AddCard: React.FC = () => {
             console.error('Error creating flashcard:', error);
         }
     };
-    
+
     const updateFront = (front: string) => {
         const updatedCard = { ...flashcard, front };
         flashcardRef.current = updatedCard;
@@ -100,7 +101,7 @@ const AddCard: React.FC = () => {
     const updateTags = (tags: string) => {
         const updatedCard = { ...flashcard, tags: tags.trim().split(',') };
         flashcardRef.current = updatedCard;
-        setFlashcard(updatedCard); 
+        setFlashcard(updatedCard);
     }
 
     const updateFlashcard = () => {
