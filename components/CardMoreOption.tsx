@@ -6,15 +6,17 @@ import { Alert, StyleSheet, Text, View } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import { useRouter } from "expo-router";
-import FlashcardUtility from "@/utils/FlashcardUtility";
+import { useAppDispatch } from "@/hooks/useAppDispatch";
+import { deleteFlashcard } from "@/store/reducers/flashcardSlice";
 
 type CardMoreOptionsProps = {
     selectedCard: Flashcard | null;
     bottomSheetRef: RefObject<BottomSheet>,
-    closeBottomSheet?: () => void
+    closeBottomSheet: () => void
 };
 
 export default function CardMoreOptions({ selectedCard, bottomSheetRef, closeBottomSheet }: CardMoreOptionsProps) {
+    const dispatch = useAppDispatch();
     const router = useRouter();
 
     const routeToUpdateScreen = () => {
@@ -26,10 +28,11 @@ export default function CardMoreOptions({ selectedCard, bottomSheetRef, closeBot
         })
     }
 
-    const deleteCard = async () => {
+    const deleteCard = () => {
         if (selectedCard) {
-            await FlashcardUtility.deleteCard(selectedCard.id);
+            dispatch(deleteFlashcard(selectedCard.id));
         }
+        closeBottomSheet();
     }
 
     const userCardOptions = () => {

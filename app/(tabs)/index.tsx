@@ -19,7 +19,7 @@ const FlashcardList: React.FC = () => {
         const loadFlashcards = async () => {
             const storedFlashcards = await FlashcardUtility.loadFlashcards()
             if (storedFlashcards) {
-                dispatch(setFlashcards(storedFlashcards));
+                dispatch(setFlashcards(storedFlashcards.reverse()));
             }
         };
         loadFlashcards();
@@ -49,7 +49,7 @@ const FlashcardList: React.FC = () => {
     return (
         <>
             {
-                flashcards
+                flashcards.length > 0
                     ? <CardList flashcards={flashcards} />
                     : <View style={styles.noCardView}>
                         <Text style={styles.noCardMessage} onPress={routeToCardCreation}>

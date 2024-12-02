@@ -1,36 +1,37 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { StyleSheet, ScrollView, Text, Alert } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { StyleSheet, ScrollView, Text, Alert, Vibration } from 'react-native';
 import { Flashcard } from '@/data/FlashCard';
 import LabelTextInput from '@/components/LabelTextInput';
 import CustomImagePicker from '@/components/CustomImagePicker';
 import { useNavigation, useRouter } from 'expo-router';
 import CustomSwitch from '@/components/CustomLabelSwitch';
-import FlashcardUtility from '@/utils/FlashcardUtility';
+import { useAppDispatch } from '@/hooks/useAppDispatch';
+import { addFlashcard } from '@/store/reducers/flashcardSlice';
 
 const AddCard: React.FC = () => {
     const getFlashcard = () => {
-        const newFlashcard: Flashcard = new Flashcard(
-            0,
-            0,
-            '',
-            '',
-            [],
-            null,
-            false
-        )
+        const newFlashcard: Flashcard = {
+            id: 0,
+            userId: 0,
+            front: '',
+            back: '',
+            tags: [],
+            imageUri: null,
+            isPrivate: false,
+            options: []
+        }
 
         return newFlashcard;
     }
 
-
+    const navigation = useNavigation();
     const [flashcard, setFlashcard] = useState(getFlashcard());
     const flashcardRef = useRef(flashcard);
-
-    const navigation = useNavigation();
     const router = useRouter();
+    const dispatch = useAppDispatch();
 
     const handleSubmit = async () => {
+        Vibration.vibrate(10);
         if (!flashcardRef.current.front || !flashcardRef.current.back) {
             Alert.alert(
                 '',
@@ -40,40 +41,35 @@ const AddCard: React.FC = () => {
         }
 
         try {
+            const newFlashcard: Flashcard = {
+                id: 0,
+                userId: 0,
+                front: flashcardRef.current.front,
+                back: flashcardRef.current.back,
+                tags: flashcardRef.current.tags,
+                imageUri: flashcardRef.current.imageUri,
+                isPrivate: flashcardRef.current.isPrivate,
+                options: []
+            }
 
-            const existingFlashcards = await AsyncStorage.getItem('flashcards') || '[]';
-            const flashcards: Flashcard[] = JSON.parse(existingFlashcards);
-
-            const newFlashcard: Flashcard = new Flashcard(
-                flashcards.length > 0 ? flashcards[flashcards.length - 1].id + 1 : 1,
-                0,
-                flashcardRef.current.front,
-                flashcardRef.current.back,
-                flashcardRef.current.tags,
-                flashcardRef.current.imageUri,
-                flashcardRef.current.isPrivate
-            );
-
-            flashcards.push(newFlashcard);
-
-            await FlashcardUtility.saveCards(flashcards);
+            dispatch(addFlashcard(newFlashcard));
 
             updateFlashcard();
-            Alert.alert(
-                '',
-                'Card created',
-                [
-                    {
-                        text: "Take me to my feed.",
-                        onPress: () => router.push('/(tabs)')
-                    }
-                ]
-            )
+            router.push("/(tabs)");
         } catch (error) {
             console.error('Error creating flashcard:', error);
         }
     };
 
+
+    useEffect(() => {
+        navigation.setOptions({
+            headerRight: () => (
+                <Text onPress={handleSubmit} style={styles.createCard}>Create</Text>
+            ),
+        });
+    }, []);
+    
     const updateFront = (front: string) => {
         const updatedCard = { ...flashcard, front };
         flashcardRef.current = updatedCard;
@@ -136,7 +132,7 @@ const AddCard: React.FC = () => {
                 imageUri={flashcard.imageUri}
                 setImageUri={updateImageUri}
             />
-            <Text onPress={handleSubmit} style={styles.createCard} allowFontScaling={true}>Create</Text>
+
         </ScrollView>
     );
 };

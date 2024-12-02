@@ -31,7 +31,7 @@ export default function UserCards() {
     return (
         <>
             {
-                flashcards
+                flashcards.length > 0
                     ? <CardList flashcards={userFlashcards} />
                     : <View style={styles.noCardView}>
                         <Text style={styles.noCardMessage}>

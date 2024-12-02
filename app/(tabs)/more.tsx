@@ -16,7 +16,7 @@ const MoreScreen = () => {
             data: [
                 { label: "Edit Profile", onPress: () => Alert.alert("Edit Profile") },
                 { label: "Change Password", onPress: () => Alert.alert("Change Password") },
-                { label: "Clear memory", onPress: async () => { await AsyncStorage.clear(); Alert.alert("Change Password") } },
+                { label: "Clear memory", onPress: async () => { await AsyncStorage.clear();} },
             ],
         },
         {

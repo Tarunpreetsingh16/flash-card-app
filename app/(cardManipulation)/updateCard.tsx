@@ -1,39 +1,36 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, ScrollView, Text, Alert, Button, Pressable, TouchableOpacity, Vibration } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Flashcard } from '@/data/FlashCard';
 import LabelTextInput from '@/components/LabelTextInput';
-import { useNavigation, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import CustomSwitch from '@/components/CustomLabelSwitch';
 import { useSearchParams } from 'expo-router/build/hooks';
-import FlashcardUtility from '@/utils/FlashcardUtility';
-import { useDispatch } from 'react-redux';
-import { useAppSelector } from '@/hooks/useAppSelector';
-import { RootState } from '@/store';
+import { useAppDispatch } from '@/hooks/useAppDispatch';
+import { updateFlashcard } from '@/store/reducers/flashcardSlice';
 
 const UpdateCard: React.FC = () => {
     const getFlashcard = () => {
-        const newFlashcard: Flashcard = new Flashcard(
-            0,
-            0,
-            '',
-            '',
-            [],
-            null,
-            false
-        )
+        const newFlashcard: Flashcard  = {
+            id: 0,
+            userId: 0,
+            front: '',
+            back: '',
+            tags: [],
+            imageUri: null,
+            isPrivate: false,
+            options: []
+        }
 
         return newFlashcard;
     }
     const params = useSearchParams();
     const flashcardTobeEditedString = params.get('flashcard');
     const [flashcard, setFlashcard] = useState(getFlashcard());
-    const flashcards = useAppSelector((state: RootState) => state.flashcards.flashcards)
+    const dispatch = useAppDispatch();
 
     const router = useRouter();
 
     useEffect(() => {
-
         if (!flashcardTobeEditedString) {
             Alert.alert(
                 "",
@@ -63,15 +60,7 @@ const UpdateCard: React.FC = () => {
         }
 
         try {
-            for (let i = 0; i < flashcards.length; i++) {
-                if (flashcards[i].id === flashcard.id) {
-                    flashcards[i] = { ...flashcard };
-                    flashcards[i].imageUri = flashcard.imageUri ? encodeURI(flashcard.imageUri) : null;
-                }
-            }
-            await FlashcardUtility.saveCards(flashcards);
-
-
+            dispatch(updateFlashcard(flashcard))
             router.back();
         } catch (error) {
             console.error('Error updating flashcard:', error);

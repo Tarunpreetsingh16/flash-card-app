@@ -14,16 +14,8 @@ export default class FlashcardUtility {
         return [];
     }
 
-    static deleteCard = async (id: number) => {
-        const storedFlashcards = await this.loadFlashcards();
-        if (storedFlashcards) {
-            const updatedCards = storedFlashcards?.filter((card) => card.id != id)
-            await this.saveCards(updatedCards);
-            console.log(`Successfully deleted card with id ${id}`);
-        }
-    }
-
     static saveCards = async (flashcards: Flashcard[]) => {
         await AsyncStorage.setItem('flashcards', JSON.stringify(flashcards));
+        console.log("Successfully saved cards to async storage!")
     }
 }
