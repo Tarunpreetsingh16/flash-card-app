@@ -1,3 +1,5 @@
+import { useAppDispatch } from "@/hooks/useAppDispatch";
+import { clearCards } from "@/store/reducers/flashcardSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React from "react";
 import {
@@ -10,13 +12,14 @@ import {
 } from "react-native";
 
 const MoreScreen = () => {
+    const dispatch = useAppDispatch();
     const settingsData = [
         {
             title: "Account Settings",
             data: [
                 { label: "Edit Profile", onPress: () => Alert.alert("Edit Profile") },
                 { label: "Change Password", onPress: () => Alert.alert("Change Password") },
-                { label: "Clear memory", onPress: async () => { await AsyncStorage.clear();} },
+                { label: "Clear memory", onPress: () => dispatch(clearCards()) },
             ],
         },
         {

@@ -17,17 +17,7 @@ export default function UserCards() {
             setUserFlashcards(filteredFlashcards.reverse());
         }
     }, [flashcards])
-
-    // useFocusEffect(React.useCallback(() => {
-    //     const loadFlashcards = async () => {
-    //         const storedFlashcards = await FlashcardUtility.loadFlashcards();
-    //         if (storedFlashcards != null) {
-    //             let flashcardsFromStorage = storedFlashcards.filter((card) => card.userId == userId);
-    //             setFlashcards(flashcardsFromStorage.length > 0 ? flashcardsFromStorage.reverse() : null);
-    //         }
-    //     };
-    //     loadFlashcards();
-    // }, []));
+    
     return (
         <>
             {

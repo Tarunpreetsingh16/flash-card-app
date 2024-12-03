@@ -2,12 +2,13 @@ import { Flashcard } from "@/data/FlashCard";
 import BottomSheet from "@gorhom/bottom-sheet";
 import { RefObject, useState } from "react";
 import BottomSheetComponent from "./BottomSheet";
-import { Alert, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
-import { useRouter } from "expo-router";
 import { useAppDispatch } from "@/hooks/useAppDispatch";
 import { deleteFlashcard } from "@/store/reducers/flashcardSlice";
+import CustomModal from "./CustomModal";
+import UpdateCardModal from "./UpdateCardModal";
 
 type CardMoreOptionsProps = {
     selectedCard: Flashcard | null;
@@ -17,15 +18,11 @@ type CardMoreOptionsProps = {
 
 export default function CardMoreOptions({ selectedCard, bottomSheetRef, closeBottomSheet }: CardMoreOptionsProps) {
     const dispatch = useAppDispatch();
-    const router = useRouter();
+    const [updateCardModalVisible, setUpdateCardModalVisible] = useState(false);
 
-    const routeToUpdateScreen = () => {
-        router.push({
-            pathname: `/(cardManipulation)/updateCard`,
-            params: {
-                flashcard: JSON.stringify(selectedCard)
-            }
-        })
+    const openUpdateCardModal = () => {
+        closeBottomSheet();
+        setUpdateCardModalVisible(true);
     }
 
     const deleteCard = () => {
@@ -35,10 +32,12 @@ export default function CardMoreOptions({ selectedCard, bottomSheetRef, closeBot
         closeBottomSheet();
     }
 
+    const closeUpdateCardModal = () => setUpdateCardModalVisible(false)
+
     const userCardOptions = () => {
         return (
             <>
-                <OptionIconLabel label="Edit" onPress={routeToUpdateScreen}>
+                <OptionIconLabel label="Edit" onPress={openUpdateCardModal}>
                     <FontAwesome name="pencil" style={[styles.icon]} />
                 </OptionIconLabel>
 
@@ -51,10 +50,10 @@ export default function CardMoreOptions({ selectedCard, bottomSheetRef, closeBot
     const othersCardOptions = () => {
         return (
             <>
-                <OptionIconLabel label="Follow account" onPress={routeToUpdateScreen}>
+                <OptionIconLabel label="Follow account">
                     <FontAwesome name="user-plus" style={[styles.icon]} />
                 </OptionIconLabel>
-                <OptionIconLabel label="Report" onPress={routeToUpdateScreen}>
+                <OptionIconLabel label="Report">
                     <FontAwesome name="flag" style={[styles.icon]} color={'red'} />
                 </OptionIconLabel>
             </>
@@ -62,20 +61,28 @@ export default function CardMoreOptions({ selectedCard, bottomSheetRef, closeBot
     }
 
     return (
-        <BottomSheetComponent bottomSheetRef={bottomSheetRef} snapPoints={['5%']} closeBottomSheet={closeBottomSheet}>
-            <View style={[styles.container]}>
-                {
-                    selectedCard?.userId === 0 ? userCardOptions() : othersCardOptions()
+        <>
+            <BottomSheetComponent bottomSheetRef={bottomSheetRef} snapPoints={['5%']} closeBottomSheet={closeBottomSheet}>
+                <View style={[styles.container]}>
+                    {
+                        selectedCard?.userId === 0 ? userCardOptions() : othersCardOptions()
+                    }
+                </View>
+            </BottomSheetComponent>
+
+            <CustomModal visible={updateCardModalVisible} hideModal={closeUpdateCardModal}>
+                {selectedCard &&
+                    <UpdateCardModal flashcardToBeUpdated={selectedCard} closeModal={closeUpdateCardModal} />
                 }
-            </View>
-        </BottomSheetComponent>
+            </CustomModal>
+        </>
     )
 }
 
 type OptionIconLabelProps = {
     label: string;
     children: React.ReactNode;
-    onPress: () => void
+    onPress?: () => void
 }
 
 const OptionIconLabel = ({ label, children, onPress }: OptionIconLabelProps) => {

@@ -24,11 +24,9 @@ const CardList = (props: CardListProps) => {
         setSelectedCard(item);
         bottomSheetRef.current?.snapToIndex(1);
     };
-
     const closeBottomSheet = () => {
         bottomSheetRef.current?.close()
     }
-
     useFocusEffect(React.useCallback(() => {
         return () => closeBottomSheet;
     }, []));
@@ -37,12 +35,12 @@ const CardList = (props: CardListProps) => {
             <FlatList
                 data={flashcards}
                 renderItem={renderItem}
-                keyExtractor={(item, index) => item.id.toString()}
+                keyExtractor={(item) => item.id.toString()}
                 style={styles.list}
                 ListFooterComponent={<View style={{ height: 20 }} />} // Adds space below the list
                 showsVerticalScrollIndicator={false}
             />
-            <CardMoreOptions bottomSheetRef={bottomSheetRef} selectedCard={selectedCard} closeBottomSheet={closeBottomSheet}/>
+            <CardMoreOptions bottomSheetRef={bottomSheetRef} selectedCard={selectedCard} closeBottomSheet={closeBottomSheet} />
         </GestureHandlerRootView>
     );
 };

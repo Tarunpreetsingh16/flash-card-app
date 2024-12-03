@@ -38,7 +38,6 @@ const flashcardSlice = createSlice({
             for (let i = 0; i < state.flashcards.length; i++) {
                 if (state.flashcards[i].id === flashcard.id) {
                     state.flashcards[i] = { ...flashcard };
-                    state.flashcards[i].imageUri = flashcard.imageUri ? encodeURI(flashcard.imageUri) : null;
                 }
             }
             console.log(`Successfully update card with id ${flashcard.id}`);
@@ -49,10 +48,14 @@ const flashcardSlice = createSlice({
             state.flashcards = state.flashcards.filter((card) => card.id !== id);
             console.log(`Successfully deleted card with id ${id}`)
             FlashcardUtility.saveCards(state.flashcards);
+        },
+        clearCards: (state) => {
+            state.flashcards = []
+            FlashcardUtility.saveCards(state.flashcards);
         }
     }
 });
 
 
-export const { setFlashcards, addFlashcard, updateFlashcard, deleteFlashcard } = flashcardSlice.actions;
+export const { setFlashcards, addFlashcard, updateFlashcard, deleteFlashcard, clearCards } = flashcardSlice.actions;
 export default flashcardSlice.reducer;

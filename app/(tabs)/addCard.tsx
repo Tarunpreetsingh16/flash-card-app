@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { StyleSheet, ScrollView, Text, Alert, Vibration } from 'react-native';
 import { Flashcard } from '@/data/FlashCard';
 import LabelTextInput from '@/components/LabelTextInput';
@@ -62,13 +62,13 @@ const AddCard: React.FC = () => {
     };
 
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         navigation.setOptions({
             headerRight: () => (
                 <Text onPress={handleSubmit} style={styles.createCard}>Create</Text>
             ),
         });
-    }, []);
+    }, [navigation]);
     
     const updateFront = (front: string) => {
         const updatedCard = { ...flashcard, front };
@@ -148,7 +148,6 @@ const styles = StyleSheet.create({
         textTransform: 'uppercase',
         fontWeight: 500,
         alignSelf: 'center',
-        marginVertical: 50
     }
 });
 

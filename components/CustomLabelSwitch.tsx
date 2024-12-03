@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
         shadowColor: '#000',
         elevation: 3,
         paddingHorizontal: 20,
-        paddingVertical: 10
+        paddingVertical: 10,
     },
     label: {
         fontWeight: 'bold'
