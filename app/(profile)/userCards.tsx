@@ -1,9 +1,7 @@
 import CardList from "@/components/CardList";
 import { useAppSelector } from "@/hooks/useAppSelector";
 import { RootState } from "@/store";
-import FlashcardUtility from "@/utils/FlashcardUtility";
-import { useFocusEffect } from "expo-router";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
 export default function UserCards() {
@@ -17,7 +15,7 @@ export default function UserCards() {
             setUserFlashcards(filteredFlashcards.reverse());
         }
     }, [flashcards])
-    
+
     return (
         <>
             {

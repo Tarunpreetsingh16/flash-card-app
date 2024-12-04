@@ -43,7 +43,7 @@ const AddCard: React.FC = () => {
         try {
             const newFlashcard: Flashcard = {
                 id: 0,
-                userId: 0,
+                userId: 1,
                 front: flashcardRef.current.front,
                 back: flashcardRef.current.back,
                 tags: flashcardRef.current.tags,

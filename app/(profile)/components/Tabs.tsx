@@ -2,10 +2,10 @@
 import * as React from 'react';
 import { ScrollView, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 import { TabView, SceneMap, TabBar, SceneRendererProps, NavigationState } from 'react-native-tab-view';
-import UserCards from './Tabs/UserCards';
+import Cards from './Tabs/Cards';
 
 const CardsRoute = () => (
-    <UserCards />
+    <Cards />
 );
 
 const CategoriesRoute = () => (
@@ -24,7 +24,7 @@ const routes = [
     { key: 'categoriesRoute', title: 'Categories' },
 ];
 
-export default function TabViewExample() {
+export default function Tabs() {
     const layout = useWindowDimensions();
     const [index, setIndex] = React.useState(0);
 
