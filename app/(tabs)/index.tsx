@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useNavigation, useRouter } from 'expo-router';
 import CardList from '@/components/CardList';
@@ -16,13 +16,14 @@ const FlashcardList: React.FC = () => {
     const navigation = useNavigation();
     const dispatch = useAppDispatch();
     const flashcards = useAppSelector((state: RootState) => state.flashcards.flashcards)
+    const [othersFlashcards, setOthersFlashcards] = useState(flashcards);
 
     useEffect(() => {
         const loadFlashcards = async () => {
             const storedFlashcards = await FlashcardUtility.loadFlashcards()
             const storedCategories = await CategoryUtility.loadCategories()
             if (storedFlashcards) {
-                dispatch(setFlashcards(storedFlashcards.reverse()));
+                dispatch(setFlashcards(storedFlashcards));
             }
             if (storedCategories) {
                 dispatch(setCategories(storedCategories));
@@ -44,26 +45,21 @@ const FlashcardList: React.FC = () => {
         });
     }, []);
 
+
+    useEffect(() => {
+        if (flashcards) {
+            const filteredFlashcards = flashcards.filter((card) => card.userId != 0 && !card.isPrivate);
+            setOthersFlashcards(filteredFlashcards.reverse());
+        }
+    }, [flashcards])
+
+
     const routeToProfile = () => {
         router.push('/(profile)/profile');
     }
 
-    const routeToCardCreation = () => {
-        router.push('/(tabs)/addCard');
-    }
-
     return (
-        <>
-            {
-                flashcards.length > 0
-                    ? <CardList flashcards={flashcards} />
-                    : <View style={styles.noCardView}>
-                        <Text style={styles.noCardMessage} onPress={routeToCardCreation}>
-                            Let's create my first card!
-                        </Text>
-                    </View>
-            }
-        </>
+        <CardList flashcards={othersFlashcards} />
     );
 };
 

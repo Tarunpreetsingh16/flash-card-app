@@ -10,7 +10,7 @@ import { addFlashcard } from '@/store/reducers/flashcardSlice';
 import { Category } from '@/data/Category';
 import { useAppSelector } from '@/hooks/useAppSelector';
 import { RootState } from '@/store';
-import Dropdown from '@/components/DropdownListWithDescription';
+import SearchableDropdown from '@/components/SearchableDropdown';
 
 const AddCard: React.FC = () => {
     const getFlashcard = () => {
@@ -39,7 +39,13 @@ const AddCard: React.FC = () => {
     const flashcardRef = useRef(flashcard);
     const router = useRouter();
     const dispatch = useAppDispatch();
+    const [searchKey, setSearchKey] = useState('');
     const categories = useAppSelector((state: RootState) => state.categories.categories)
+
+    const onSearchKeyChange = (val: string) => {
+        setSearchKey(val);
+    }
+    console.log({searchKey});
 
     const handleSubmit = async () => {
         Vibration.vibrate(10);
@@ -106,12 +112,6 @@ const AddCard: React.FC = () => {
         setFlashcard(updatedCard);
     }
 
-    const updateTags = (tags: string) => {
-        const updatedCard = { ...flashcard, tags: tags.trim().split(',') };
-        flashcardRef.current = updatedCard;
-        setFlashcard(updatedCard);
-    }
-
     const updateFlashcard = () => {
         flashcardRef.current = getFlashcard();
         setFlashcard(flashcardRef.current);
@@ -133,14 +133,8 @@ const AddCard: React.FC = () => {
                 onChange={updateBack}
                 label='Answer'
             />
-            <LabelTextInput
-                placeholder="Comma separate tags"
-                value={flashcard.tags.toString()}
-                onChange={updateTags}
-                label='Tags'
-            />
             <CustomSwitch isSwitchOn={flashcard.isPrivate} onSwitchToggle={updateIsPrivate} />
-            <Dropdown />
+            <SearchableDropdown label='Category' onChange={onSearchKeyChange} placeholder='Create or search a category' searchKey={searchKey} />
             <CustomImagePicker
                 imageUri={flashcard.imageUri}
                 setImageUri={updateImageUri}
