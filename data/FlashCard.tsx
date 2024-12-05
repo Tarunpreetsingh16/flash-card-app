@@ -1,3 +1,4 @@
+import { Category } from "./Category";
 import { Option } from "./Option";
 
 export interface Flashcard {
@@ -12,4 +13,5 @@ export interface Flashcard {
     likes?: number;
     dislikes?: number;
     shares?: number;
+    category: Category
 }

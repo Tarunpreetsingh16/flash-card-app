@@ -9,7 +9,7 @@ interface FlashcardsState {
 
 const initialState: FlashcardsState = {
     flashcards: [],
-    count: 0
+    count: 0,
 }
 
 const flashcardSlice = createSlice({

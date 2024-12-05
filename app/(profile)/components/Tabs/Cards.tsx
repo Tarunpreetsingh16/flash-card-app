@@ -7,7 +7,7 @@ export default function Cards() {
     const router = useRouter();
 
     const routeToUserCards = () => {
-        router.push('/(profile)\\userCards')
+        router.push('/(profile)/userCards')
     }
 
     return (

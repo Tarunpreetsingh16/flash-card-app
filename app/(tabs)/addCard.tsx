@@ -7,9 +7,18 @@ import { useNavigation, useRouter } from 'expo-router';
 import CustomSwitch from '@/components/CustomLabelSwitch';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { addFlashcard } from '@/store/reducers/flashcardSlice';
+import { Category } from '@/data/Category';
+import { useAppSelector } from '@/hooks/useAppSelector';
+import { RootState } from '@/store';
+import Dropdown from '@/components/DropdownListWithDescription';
 
 const AddCard: React.FC = () => {
     const getFlashcard = () => {
+        const category: Category = {
+            id: 0,
+            count: 0,
+            name: '',
+        }
         const newFlashcard: Flashcard = {
             id: 0,
             userId: 0,
@@ -18,7 +27,8 @@ const AddCard: React.FC = () => {
             tags: [],
             imageUri: null,
             isPrivate: false,
-            options: []
+            options: [],
+            category
         }
 
         return newFlashcard;
@@ -29,6 +39,7 @@ const AddCard: React.FC = () => {
     const flashcardRef = useRef(flashcard);
     const router = useRouter();
     const dispatch = useAppDispatch();
+    const categories = useAppSelector((state: RootState) => state.categories.categories)
 
     const handleSubmit = async () => {
         Vibration.vibrate(10);
@@ -49,7 +60,8 @@ const AddCard: React.FC = () => {
                 tags: flashcardRef.current.tags,
                 imageUri: flashcardRef.current.imageUri,
                 isPrivate: flashcardRef.current.isPrivate,
-                options: []
+                options: [],
+                category: flashcardRef.current.category
             }
 
             dispatch(addFlashcard(newFlashcard));
@@ -128,6 +140,7 @@ const AddCard: React.FC = () => {
                 label='Tags'
             />
             <CustomSwitch isSwitchOn={flashcard.isPrivate} onSwitchToggle={updateIsPrivate} />
+            <Dropdown />
             <CustomImagePicker
                 imageUri={flashcard.imageUri}
                 setImageUri={updateImageUri}

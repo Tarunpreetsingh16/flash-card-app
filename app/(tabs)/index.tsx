@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useNavigation, useRouter } from 'expo-router';
 import CardList from '@/components/CardList';
@@ -7,6 +7,8 @@ import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { setFlashcards } from '@/store/reducers/flashcardSlice';
 import { useAppSelector } from '@/hooks/useAppSelector';
 import { RootState } from '@/store';
+import CategoryUtility from '@/utils/CategoryUtility';
+import { setCategories } from '@/store/reducers/categorySlice';
 
 
 const FlashcardList: React.FC = () => {
@@ -18,8 +20,12 @@ const FlashcardList: React.FC = () => {
     useEffect(() => {
         const loadFlashcards = async () => {
             const storedFlashcards = await FlashcardUtility.loadFlashcards()
+            const storedCategories = await CategoryUtility.loadCategories()
             if (storedFlashcards) {
                 dispatch(setFlashcards(storedFlashcards.reverse()));
+            }
+            if (storedCategories) {
+                dispatch(setCategories(storedCategories));
             }
         };
         loadFlashcards();
