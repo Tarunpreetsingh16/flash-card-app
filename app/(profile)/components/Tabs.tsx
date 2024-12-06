@@ -1,7 +1,8 @@
 
 import * as React from 'react';
-import { ScrollView, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
+import { StyleSheet, useWindowDimensions } from 'react-native';
 import { TabView, SceneMap, TabBar, SceneRendererProps, NavigationState } from 'react-native-tab-view';
+import Categories from './Tabs/Categories';
 import Cards from './Tabs/Cards';
 
 const CardsRoute = () => (
@@ -9,10 +10,8 @@ const CardsRoute = () => (
 );
 
 const CategoriesRoute = () => (
-    <View style={[styles.scene]}>
-        <Text>Second Tab Content</Text>
-    </View>
-)
+    <Categories />
+);
 
 const renderScene = SceneMap({
     cardsRoute: CardsRoute,

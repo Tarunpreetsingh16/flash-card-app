@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { StyleSheet, ScrollView, Text, Alert, Vibration } from 'react-native';
 import { Flashcard } from '@/data/FlashCard';
 import LabelTextInput from '@/components/LabelTextInput';
@@ -10,7 +10,8 @@ import { addFlashcard } from '@/store/reducers/flashcardSlice';
 import { Category } from '@/data/Category';
 import { useAppSelector } from '@/hooks/useAppSelector';
 import { RootState } from '@/store';
-import SearchableDropdown from '@/components/SearchableDropdown';
+import SearchableDropdown, { SearchableDropdownItem } from '@/components/SearchableDropdown';
+import { addCategory } from '@/store/reducers/categorySlice';
 
 const AddCard: React.FC = () => {
     const getFlashcard = () => {
@@ -39,13 +40,35 @@ const AddCard: React.FC = () => {
     const flashcardRef = useRef(flashcard);
     const router = useRouter();
     const dispatch = useAppDispatch();
-    const [searchKey, setSearchKey] = useState('');
     const categories = useAppSelector((state: RootState) => state.categories.categories)
+    const [searchTerm, setSearchTerm] = useState('');
+    const searchTermRef = useRef(searchTerm);
+    const [debouncedTerm, setDebouncedTerm] = useState(searchTerm);
 
-    const onSearchKeyChange = (val: string) => {
-        setSearchKey(val);
-    }
-    console.log({searchKey});
+    React.useEffect(() => {
+        const handler = setTimeout(() => {
+            setDebouncedTerm(searchTerm);
+        }, 300);
+        return () => clearTimeout(handler);
+    }, [searchTerm]);
+
+    const filteredCategories = useMemo(() => {
+        const filteredCategories: SearchableDropdownItem[] = [];
+        const lowercasedTerm = debouncedTerm.toLowerCase();
+        categories.forEach((category) => {
+            if (lowercasedTerm
+                && lowercasedTerm.trim().length > 2
+                && category.name.toLowerCase().includes(lowercasedTerm)) {
+                const idx = filteredCategories.length === 0 ? 0 : filteredCategories.length + 1;
+                const item: SearchableDropdownItem = {
+                    id: category.id,
+                    name: category.name
+                }
+                filteredCategories[idx] = item;
+            }
+        });
+        return filteredCategories;
+    }, [debouncedTerm]);
 
     const handleSubmit = async () => {
         Vibration.vibrate(10);
@@ -56,7 +79,11 @@ const AddCard: React.FC = () => {
             )
             return;
         }
-
+        const category: Category = {
+            id: 0,
+            name: searchTermRef.current,
+            count: 1
+        }
         try {
             const newFlashcard: Flashcard = {
                 id: 0,
@@ -67,10 +94,11 @@ const AddCard: React.FC = () => {
                 imageUri: flashcardRef.current.imageUri,
                 isPrivate: flashcardRef.current.isPrivate,
                 options: [],
-                category: flashcardRef.current.category
+                category: category
             }
 
             dispatch(addFlashcard(newFlashcard));
+            dispatch(addCategory(category))
 
             updateFlashcard();
             router.push("/(tabs)");
@@ -87,7 +115,7 @@ const AddCard: React.FC = () => {
             ),
         });
     }, [navigation]);
-    
+
     const updateFront = (front: string) => {
         const updatedCard = { ...flashcard, front };
         flashcardRef.current = updatedCard;
@@ -114,7 +142,13 @@ const AddCard: React.FC = () => {
 
     const updateFlashcard = () => {
         flashcardRef.current = getFlashcard();
+        setSearchTerm('');
         setFlashcard(flashcardRef.current);
+    }
+
+    const updateSearchTerm = (val: string) => {
+        searchTermRef.current = val;
+        setSearchTerm(val);
     }
 
     return (
@@ -134,7 +168,13 @@ const AddCard: React.FC = () => {
                 label='Answer'
             />
             <CustomSwitch isSwitchOn={flashcard.isPrivate} onSwitchToggle={updateIsPrivate} />
-            <SearchableDropdown label='Category' onChange={onSearchKeyChange} placeholder='Create or search a category' searchKey={searchKey} />
+            <SearchableDropdown
+                label='Category'
+                onChange={updateSearchTerm}
+                placeholder='Create or search a category'
+                searchKey={searchTerm}
+                hits={filteredCategories}
+            />
             <CustomImagePicker
                 imageUri={flashcard.imageUri}
                 setImageUri={updateImageUri}

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import LabelTextInput from './LabelTextInput';
 
 type SearchableDropdownProps = {
@@ -7,6 +7,7 @@ type SearchableDropdownProps = {
     onChange: (val: string) => void;
     label: string;
     placeholder: string;
+    hits: SearchableDropdownItem[]
 };
 
 const SearchableDropdown = ({
@@ -14,7 +15,20 @@ const SearchableDropdown = ({
     onChange,
     label,
     placeholder,
+    hits
 }: SearchableDropdownProps) => {
+    const [optionsContainerVisible, setOptionsContainerVisible] = React.useState(false);
+    console.log({ hits, searchKey, optionsContainerVisible });
+
+    React.useEffect(() => {
+        if (hits && hits.length > 0) {
+            setOptionsContainerVisible(true);
+        }
+        else {
+            setOptionsContainerVisible(false);
+        }
+    }, [hits])
+
     return (
         <View style={styles.container}>
             <LabelTextInput
@@ -23,12 +37,28 @@ const SearchableDropdown = ({
                 onChange={onChange}
                 label={label}
             />
-            <View style={styles.optionsContainer}>
-                <Text style={styles.optionText}>Option 1</Text>
-                <Text style={styles.optionText}>Option 2</Text>
-                <Text style={styles.optionText}>Option 3</Text>
-            </View>
-        </View>
+            {optionsContainerVisible
+                &&
+                <ScrollView style={styles.optionsContainer}>
+                    {
+                        hits.map((hit) => {
+                            return (
+                                <Text
+                                    style={styles.optionText}
+                                    key={hit.id}
+                                    onPress={() =>  {
+                                        onChange(hit.name);
+                                        setOptionsContainerVisible(false)
+                                    }}>
+                                    {hit.name}
+                                </Text>
+                            )
+                        })
+                    }
+                </ScrollView>
+            }
+
+        </View >
     );
 };
 
@@ -36,17 +66,21 @@ const styles = StyleSheet.create({
     optionsContainer: {
         backgroundColor: 'white',
         position: 'absolute',
-        top: '100%', // Start at the bottom of the LabelTextInput
+        top: '90%',
         left: 0,
         right: 0,
-        padding: 10,
-        margin: 10,
-        zIndex: 10, // Ensure it overlays other content
+        zIndex: 10,
+        borderWidth: 0.3,
+        elevation: 5,
+        height: 120
     },
     optionText: {
-        paddingHorizontal: 10,
+        paddingHorizontal: 15,
         paddingVertical: 10,
     },
 });
-
+export interface SearchableDropdownItem {
+    id: number,
+    name: string
+}
 export default SearchableDropdown;
