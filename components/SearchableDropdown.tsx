@@ -1,27 +1,34 @@
 import * as React from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Keyboard, ScrollView, StyleSheet, Text, View } from 'react-native';
 import LabelTextInput from './LabelTextInput';
+import { GestureHandlerRootView, TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 type SearchableDropdownProps = {
     searchKey: string;
-    onChange: (val: string) => void;
+    onValueChange: (val: string) => void;
     label: string;
     placeholder: string;
-    hits: SearchableDropdownItem[]
+    hits: SearchableDropdownItem[];
+    onOptionSelect: (id: number) => void
 };
 
 const SearchableDropdown = ({
     searchKey,
-    onChange,
+    onValueChange,
     label,
     placeholder,
-    hits
+    hits,
+    onOptionSelect
 }: SearchableDropdownProps) => {
     const [optionsContainerVisible, setOptionsContainerVisible] = React.useState(false);
-    console.log({ hits, searchKey, optionsContainerVisible });
+    const optionsContainerHiddenRef = React.useRef(false);
 
     React.useEffect(() => {
-        if (hits && hits.length > 0) {
+        if (optionsContainerHiddenRef.current) {
+            setOptionsContainerVisible(false);
+            optionsContainerHiddenRef.current = false
+        }
+        else if (hits && hits.length > 0) {
             setOptionsContainerVisible(true);
         }
         else {
@@ -29,12 +36,19 @@ const SearchableDropdown = ({
         }
     }, [hits])
 
+    const onPress = (hit: SearchableDropdownItem) => {
+        Keyboard.dismiss(); // Close the keyboard
+        onValueChange(hit.name);
+        onOptionSelect(hit.id);
+        optionsContainerHiddenRef.current = true
+    }
+
     return (
-        <View style={styles.container}>
+        <View>
             <LabelTextInput
                 placeholder={placeholder}
                 value={searchKey}
-                onChange={onChange}
+                onChange={onValueChange}
                 label={label}
             />
             {optionsContainerVisible
@@ -43,15 +57,13 @@ const SearchableDropdown = ({
                     {
                         hits.map((hit) => {
                             return (
-                                <Text
-                                    style={styles.optionText}
-                                    key={hit.id}
-                                    onPress={() =>  {
-                                        onChange(hit.name);
-                                        setOptionsContainerVisible(false)
-                                    }}>
-                                    {hit.name}
-                                </Text>
+                                <GestureHandlerRootView key={hit.id}>
+                                    <TouchableWithoutFeedback
+                                        style={styles.optionText}
+                                        onPress={() => onPress(hit)}>
+                                        <Text>{hit.name}</Text>
+                                    </TouchableWithoutFeedback>
+                                </GestureHandlerRootView>
                             )
                         })
                     }

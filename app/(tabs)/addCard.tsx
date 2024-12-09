@@ -44,6 +44,8 @@ const AddCard: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const searchTermRef = useRef(searchTerm);
     const [debouncedTerm, setDebouncedTerm] = useState(searchTerm);
+    const [category, setCategory] = useState<Category | null>();
+    const categoryRef = useRef(category);
 
     React.useEffect(() => {
         const handler = setTimeout(() => {
@@ -142,15 +144,28 @@ const AddCard: React.FC = () => {
 
     const updateFlashcard = () => {
         flashcardRef.current = getFlashcard();
-        setSearchTerm('');
         setFlashcard(flashcardRef.current);
+        searchTermRef.current = '';
+        setSearchTerm('');
+        categoryRef.current = null;
+        setCategory(null);
+        setDebouncedTerm(searchTerm);
     }
 
     const updateSearchTerm = (val: string) => {
         searchTermRef.current = val;
+        setCategory(null);
         setSearchTerm(val);
     }
 
+    const updateCategory = (id: number) => {
+        let category = categories.find((category: Category) => category.id === id);
+        categoryRef.current = category;
+        setCategory(category);
+    }
+
+
+    console.log({category});
     return (
         <ScrollView style={styles.container}
             showsVerticalScrollIndicator={false}
@@ -170,10 +185,11 @@ const AddCard: React.FC = () => {
             <CustomSwitch isSwitchOn={flashcard.isPrivate} onSwitchToggle={updateIsPrivate} />
             <SearchableDropdown
                 label='Category'
-                onChange={updateSearchTerm}
+                onValueChange={updateSearchTerm}
                 placeholder='Create or search a category'
                 searchKey={searchTerm}
                 hits={filteredCategories}
+                onOptionSelect={updateCategory}
             />
             <CustomImagePicker
                 imageUri={flashcard.imageUri}
