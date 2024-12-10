@@ -17,7 +17,6 @@ const AddCard: React.FC = () => {
     const getFlashcard = () => {
         const category: Category = {
             id: 0,
-            count: 0,
             name: '',
         }
         const newFlashcard: Flashcard = {
@@ -29,7 +28,7 @@ const AddCard: React.FC = () => {
             imageUri: null,
             isPrivate: false,
             options: [],
-            category
+            category: 0
         }
 
         return newFlashcard;
@@ -41,6 +40,7 @@ const AddCard: React.FC = () => {
     const router = useRouter();
     const dispatch = useAppDispatch();
     const categories = useAppSelector((state: RootState) => state.categories.categories)
+    const categoriesCount = useAppSelector((state: RootState) => state.categories.count)
     const [searchTerm, setSearchTerm] = useState('');
     const searchTermRef = useRef(searchTerm);
     const [debouncedTerm, setDebouncedTerm] = useState(searchTerm);
@@ -81,11 +81,16 @@ const AddCard: React.FC = () => {
             )
             return;
         }
-        const category: Category = {
-            id: 0,
-            name: searchTermRef.current,
-            count: 1
-        }
+        let selectedCategory = category;
+        console.log({selectedCategory});
+        if (!selectedCategory) {
+            selectedCategory = {
+                id: categoriesCount,
+                name: searchTermRef.current,
+            } as Category;
+            dispatch(addCategory(selectedCategory))
+        } 
+        
         try {
             const newFlashcard: Flashcard = {
                 id: 0,
@@ -96,11 +101,10 @@ const AddCard: React.FC = () => {
                 imageUri: flashcardRef.current.imageUri,
                 isPrivate: flashcardRef.current.isPrivate,
                 options: [],
-                category: category
+                category: selectedCategory.id
             }
 
             dispatch(addFlashcard(newFlashcard));
-            dispatch(addCategory(category))
 
             updateFlashcard();
             router.push("/(tabs)");
@@ -164,8 +168,6 @@ const AddCard: React.FC = () => {
         setCategory(category);
     }
 
-
-    console.log({category});
     return (
         <ScrollView style={styles.container}
             showsVerticalScrollIndicator={false}

@@ -28,6 +28,7 @@ const FlashcardList: React.FC = () => {
             if (storedCategories) {
                 dispatch(setCategories(storedCategories));
             }
+            console.log({storedCategories, storedFlashcards});
         };
         loadFlashcards();
     }, [dispatch])
