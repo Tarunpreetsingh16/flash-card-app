@@ -37,6 +37,7 @@ const SearchableDropdown = ({
     }, [hits])
 
     const onPress = (hit: SearchableDropdownItem) => {
+        console.log({hit});
         Keyboard.dismiss(); // Close the keyboard
         onValueChange(hit.name);
         onOptionSelect(hit.id);

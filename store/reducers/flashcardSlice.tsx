@@ -4,12 +4,12 @@ import FlashcardUtility from '@/utils/FlashcardUtility';
 
 interface FlashcardsState {
     flashcards: Flashcard[];
-    count: number
+    nextId: number
 }
 
 const initialState: FlashcardsState = {
     flashcards: [],
-    count: 0,
+    nextId: 0,
 }
 
 const flashcardSlice = createSlice({
@@ -21,16 +21,16 @@ const flashcardSlice = createSlice({
                 state.flashcards = [];
             }
             const flashcard = action.payload;
-            flashcard.id = state.count;
+            flashcard.id = state.nextId;
             state.flashcards.push(flashcard)
-            state.count = state.flashcards.length > 0 ? state.flashcards[state.flashcards.length - 1].id + 1 : 1
-            console.log(`Successfully created new card with id ${flashcard.id}, next id=${state.count}`);
+            state.nextId = state.flashcards.length > 0 ? state.flashcards[state.flashcards.length - 1].id + 1 : 0
+            console.log(`Successfully created new card with id ${flashcard.id}, next id=${state.nextId}`);
             FlashcardUtility.saveCards(state.flashcards);
 
         },
         setFlashcards: (state, action: PayloadAction<Flashcard[]>) => {
             state.flashcards = action.payload.reverse();
-            state.count = state.flashcards.length > 0 ? state.flashcards[state.flashcards.length - 1].id + 1 : 1
+            state.nextId = state.flashcards.length > 0 ? state.flashcards[state.flashcards.length - 1].id + 1 : 0
             console.log("loaded to redux store")
         },
         updateFlashcard: (state, action: PayloadAction<Flashcard>) => {

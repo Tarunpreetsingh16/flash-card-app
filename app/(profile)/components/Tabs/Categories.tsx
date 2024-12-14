@@ -1,10 +1,17 @@
 import PressableOptionItem from "@/components/PressableOptionItem";
+import { Category } from "@/data/Category";
 import { useAppSelector } from "@/hooks/useAppSelector";
+import { useRouter } from "expo-router";
 import React from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 
 const Categories = () => {
     const categories = useAppSelector((state) => state.categories.categories)
+    const router = useRouter();
+
+    const onCategoryPress = (category: Category) => {
+        router.push(`/(profile)/categoryCards?id=${category.id}`)
+    }
 
     return (
         <ScrollView style={styles.container}>
@@ -16,7 +23,7 @@ const Categories = () => {
                         >
                             <PressableOptionItem
                                 label={`${category.name}`}
-                                onPress={() => console.log({ category })} />
+                                onPress={() => onCategoryPress(category)} />
                         </View>
                     )
                 })

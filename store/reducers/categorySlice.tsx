@@ -4,12 +4,12 @@ import CategoryUtility from '@/utils/CategoryUtility';
 
 interface CategoryState {
     categories: Category[];
-    count: number;
+    nextId: number;
 }
 
 const initialState: CategoryState = {
     categories: [],
-    count: 0,
+    nextId: 0,
 }
 
 const categorySlice = createSlice({
@@ -21,14 +21,15 @@ const categorySlice = createSlice({
                 state.categories = [];
             }
             const category = action.payload;
+            category.id = state.nextId;
             state.categories.push(category);
-            state.count = state.categories.length > 0 ? state.categories[state.categories.length - 1].id + 1 : 1
-            console.log(`Successfully created new category with id ${category.id}, next id=${state.count}`);
+            state.nextId = state.categories.length > 0 ? state.categories[state.categories.length - 1].id + 1 : 0
+            console.log(`Successfully created new category with id ${category.id}, next id=${state.nextId}`);
             CategoryUtility.saveCategories(state.categories);
         },
         setCategories: (state, action: PayloadAction<Category[]>) => {
             state.categories = action.payload.reverse();
-            state.count = state.categories.length > 0 ? state.categories[state.categories.length - 1].id + 1 : 1
+            state.nextId = state.categories.length > 0 ? state.categories[state.categories.length - 1].id + 1 : 0
             console.log("loaded categories to redux store")
         },
         deleteCategory: (state, action: PayloadAction<number>) => {

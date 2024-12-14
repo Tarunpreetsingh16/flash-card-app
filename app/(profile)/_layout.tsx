@@ -11,6 +11,7 @@ export default function ProfileStackLayout() {
         options={{
           title: "My Cards",
         }} />
+      <Stack.Screen name="categoryCards" />
     </Stack>
   );
 }
