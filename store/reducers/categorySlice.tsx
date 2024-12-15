@@ -28,7 +28,7 @@ const categorySlice = createSlice({
             CategoryUtility.saveCategories(state.categories);
         },
         setCategories: (state, action: PayloadAction<Category[]>) => {
-            state.categories = action.payload.reverse();
+            state.categories = action.payload;
             state.nextId = state.categories.length > 0 ? state.categories[state.categories.length - 1].id + 1 : 0
             console.log("loaded categories to redux store")
         },

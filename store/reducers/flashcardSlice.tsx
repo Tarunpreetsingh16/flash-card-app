@@ -30,7 +30,7 @@ const flashcardSlice = createSlice({
         },
         setFlashcards: (state, action: PayloadAction<Flashcard[]>) => {
             state.flashcards = action.payload.reverse();
-            state.nextId = state.flashcards.length > 0 ? state.flashcards[state.flashcards.length - 1].id + 1 : 0
+            state.nextId = state.flashcards.length > 0 ? state.flashcards[0].id + 1 : 0
             console.log("loaded to redux store")
         },
         updateFlashcard: (state, action: PayloadAction<Flashcard>) => {
