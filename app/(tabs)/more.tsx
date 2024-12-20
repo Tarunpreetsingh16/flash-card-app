@@ -1,3 +1,4 @@
+import CustomAppBar from "@/components/CustomAppBar";
 import { useAppDispatch } from "@/hooks/useAppDispatch";
 import { clearCategories } from "@/store/reducers/categorySlice";
 import { clearCards } from "@/store/reducers/flashcardSlice";
@@ -47,21 +48,25 @@ const MoreScreen = () => {
     ];
 
     return (
-        <View style={styles.container}>
-            <SectionList
-                sections={settingsData}
-                keyExtractor={(item, index) => item.label + index}
-                renderSectionHeader={({ section: { title } }) => (
-                    <Text style={styles.sectionHeader}>{title}</Text>
-                )}
-                renderItem={({ item }) => (
-                    <TouchableOpacity onPress={item.onPress} style={styles.option}>
-                        <Text style={styles.optionText}>{item.label}</Text>
-                    </TouchableOpacity>
-                )}
-                ItemSeparatorComponent={() => <View style={styles.separator} />}
-            />
-        </View>
+        <>
+            <CustomAppBar title="More"/>
+
+            <View style={styles.container}>
+                <SectionList
+                    sections={settingsData}
+                    keyExtractor={(item, index) => item.label + index}
+                    renderSectionHeader={({ section: { title } }) => (
+                        <Text style={styles.sectionHeader}>{title}</Text>
+                    )}
+                    renderItem={({ item }) => (
+                        <TouchableOpacity onPress={item.onPress} style={styles.option}>
+                            <Text style={styles.optionText}>{item.label}</Text>
+                        </TouchableOpacity>
+                    )}
+                    ItemSeparatorComponent={() => <View style={styles.separator} />}
+                />
+            </View>
+        </>
     );
 };
 

@@ -1,4 +1,5 @@
 import CardList from "@/components/CardList";
+import CustomAppBar from "@/components/CustomAppBar";
 import { useAppSelector } from "@/hooks/useAppSelector";
 import { RootState } from "@/store";
 import { useEffect, useState } from "react";
@@ -18,6 +19,7 @@ export default function UserCards() {
 
     return (
         <>
+            <CustomAppBar title="My Cards" isOnBackPressVisible />
             {
                 flashcards.length > 0
                     ? <CardList flashcards={userFlashcards} />

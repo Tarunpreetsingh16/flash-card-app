@@ -9,7 +9,6 @@ export default function RootLayout() {
       <StatusBar barStyle="dark-content" backgroundColor="white" />
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="(profile)" options={{ headerShown: false }} />
       </Stack>
     </Provider>
   );

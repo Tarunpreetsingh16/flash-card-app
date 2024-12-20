@@ -12,6 +12,7 @@ import { useAppSelector } from '@/hooks/useAppSelector';
 import { RootState } from '@/store';
 import SearchableDropdown, { SearchableDropdownItem } from '@/components/SearchableDropdown';
 import { addCategory } from '@/store/reducers/categorySlice';
+import CustomAppBar from '@/components/CustomAppBar';
 
 const AddCard: React.FC = () => {
     const getFlashcard = () => {
@@ -170,6 +171,8 @@ const AddCard: React.FC = () => {
 
     return (
         <>
+            <CustomAppBar title="Add Card"/>
+
             <ScrollView style={styles.container}
                 showsVerticalScrollIndicator={false}
                 showsHorizontalScrollIndicator={false}>

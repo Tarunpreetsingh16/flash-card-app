@@ -1,9 +1,9 @@
 
-import * as React from 'react';
 import { StyleSheet, useWindowDimensions } from 'react-native';
-import { TabView, SceneMap, TabBar, SceneRendererProps, NavigationState } from 'react-native-tab-view';
+import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import Categories from './Tabs/Categories';
 import Cards from './Tabs/Cards';
+import React from 'react';
 
 const CardsRoute = () => (
     <Cards />

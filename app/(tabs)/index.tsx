@@ -9,6 +9,8 @@ import { useAppSelector } from '@/hooks/useAppSelector';
 import { RootState } from '@/store';
 import CategoryUtility from '@/utils/CategoryUtility';
 import { setCategories } from '@/store/reducers/categorySlice';
+import CustomAppBar from '@/components/CustomAppBar';
+import { Appbar } from 'react-native-paper';
 
 
 const FlashcardList: React.FC = () => {
@@ -28,23 +30,10 @@ const FlashcardList: React.FC = () => {
             if (storedCategories) {
                 dispatch(setCategories(storedCategories));
             }
-            console.log({storedCategories, storedFlashcards});
+            console.log({ storedCategories, storedFlashcards });
         };
         loadFlashcards();
     }, [dispatch])
-
-    useEffect(() => {
-        navigation.setOptions({
-            headerRight: () => (
-                <Pressable style={[styles.profileContainer]}
-                    onPress={routeToProfile}>
-                    <Image source={{ uri: 'https://hips.hearstapps.com/hmg-prod/images/small-dogs-yorkipoo-6626b45068df9.jpg?crop=0.466xw:0.872xh;0.279xw,0.0204xh&resize=980:*' }}
-                        style={styles.profilePic}
-                    />
-                </Pressable>
-            ),
-        });
-    }, []);
 
 
     useEffect(() => {
@@ -54,13 +43,11 @@ const FlashcardList: React.FC = () => {
         }
     }, [flashcards])
 
-
-    const routeToProfile = () => {
-        router.push('/(profile)/profile');
-    }
-
     return (
-        <CardList flashcards={othersFlashcards} />
+        <>
+            <CustomAppBar title="Flash Cards" />
+            <CardList flashcards={othersFlashcards} />
+        </>
     );
 };
 

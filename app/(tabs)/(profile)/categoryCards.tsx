@@ -1,14 +1,17 @@
 import CardList from "@/components/CardList";
+import CustomAppBar from "@/components/CustomAppBar";
 import { Category } from "@/data/Category";
 import { useAppSelector } from "@/hooks/useAppSelector";
 import { RootState } from "@/store";
-import { useNavigation } from "expo-router";
+import { FontAwesome } from "@expo/vector-icons";
 import { useSearchParams } from "expo-router/build/hooks";
-import { useEffect, useLayoutEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Platform, StyleSheet, Text, View } from "react-native";
+import { Menu, PaperProvider } from "react-native-paper";
 
 export default function CategoryCards() {
-    const navigation = useNavigation();
+    const MORE_ICON = Platform.OS === 'ios' ? 'dots-horizontal' : 'dots-vertical';
+
     const params = useSearchParams();
     const categoryIdString: string = params.get('id') ?? '';
     const userId = 0;
@@ -25,16 +28,30 @@ export default function CategoryCards() {
             const filteredFlashcards = flashcards.filter((card) => card.userId == userId && card.categoryId == category?.id);
             setCategoryFlashcards(filteredFlashcards.reverse());
         }
-    }, [])    
+    }, [])
 
-    useLayoutEffect(() => {
-        navigation.setOptions({
-            title: category?.name
-        });
-    }, [navigation, category]);
+    const [visible, setVisible] = React.useState(false);
+
+    const openMenu = () => setVisible(true);
+
+    const closeMenu = () => setVisible(false);
 
     return (
-        <>
+        <PaperProvider>
+            <CustomAppBar title={category?.name ?? ""} isOnBackPressVisible>
+                <View>
+                    <Menu
+                        visible={visible}
+                        onDismiss={closeMenu}
+                        anchor={
+                            <FontAwesome name="ellipsis-v"
+                                style={[styles.icon, styles.ellipses]}
+                                onPress={openMenu} />}>
+                        <Menu.Item onPress={() => { }} title="Edit" />
+                        <Menu.Item onPress={() => { }} title="Delete" />
+                    </Menu>
+                </View>
+            </CustomAppBar>
             {
                 flashcards.length > 0
                     ? <CardList flashcards={categoryFlashcards} />
@@ -44,7 +61,7 @@ export default function CategoryCards() {
                         </Text>
                     </View>
             }
-        </>
+        </PaperProvider>
     )
 }
 
@@ -57,5 +74,13 @@ const styles = StyleSheet.create({
     noCardMessage: {
         fontSize: 20,
         fontStyle: 'italic',
+    },
+    icon: {
+        fontSize: 18,
+        paddingHorizontal: 10,
+        color: 'black'
+    },
+    ellipses: {
+        alignSelf: 'center',
     },
 })
