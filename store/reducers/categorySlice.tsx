@@ -33,10 +33,10 @@ const categorySlice = createSlice({
             state.nextId = state.categories.length > 0 ? state.categories[state.categories.length - 1].id + 1 : 0
             console.log("loaded categories to redux store")
         },
-        deleteCategory: (state, action: PayloadAction<number>) => {
-            const id = action.payload;
-            state.categories = state.categories.filter((category) => category.id !== id);
-            console.log(`Successfully deleted category with id ${id}`)
+        deleteCategory: (state, action: PayloadAction<Category>) => {
+            const categoryToBeDeleted = action.payload;
+            state.categories = state.categories.filter((category) => category.id !== categoryToBeDeleted.id);
+            console.log(`Successfully deleted category with id ${categoryToBeDeleted.id}`)
             CategoryUtility.saveCategories(state.categories);
         },
         clearCategories: (state) => {

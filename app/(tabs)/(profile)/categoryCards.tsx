@@ -1,24 +1,26 @@
 import CardList from "@/components/CardList";
 import CustomAppBar from "@/components/CustomAppBar";
 import { Category } from "@/data/Category";
+import { useAppDispatch } from "@/hooks/useAppDispatch";
 import { useAppSelector } from "@/hooks/useAppSelector";
 import { RootState } from "@/store";
+import { deleteCategory } from "@/store/reducers/categorySlice";
 import { FontAwesome } from "@expo/vector-icons";
-import { useSearchParams } from "expo-router/build/hooks";
+import { useRouter, useSearchParams } from "expo-router/build/hooks";
 import React, { useEffect, useState } from "react";
-import { Platform, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { Menu, PaperProvider } from "react-native-paper";
 
 export default function CategoryCards() {
-    const MORE_ICON = Platform.OS === 'ios' ? 'dots-horizontal' : 'dots-vertical';
-
     const params = useSearchParams();
+    const router = useRouter();
     const categoryIdString: string = params.get('id') ?? '';
     const userId = 0;
     const flashcards = useAppSelector((state: RootState) => state.flashcards.flashcards)
     const categories = useAppSelector((state: RootState) => state.categories.categories)
     const [categoryFlashcards, setCategoryFlashcards] = useState(flashcards);
     const [category, setCategory] = useState<Category>();
+    const dispatch = useAppDispatch();
 
     useEffect(() => {
         if (flashcards && categoryIdString && !isNaN(parseInt(categoryIdString.trim()))) {
@@ -36,6 +38,13 @@ export default function CategoryCards() {
 
     const closeMenu = () => setVisible(false);
 
+    const onPressDelete = () => {
+        if (category) {
+            dispatch(deleteCategory(category));
+            router.back();
+        }
+    }
+
     return (
         <PaperProvider>
             <CustomAppBar title={category?.name ?? ""} isOnBackPressVisible>
@@ -48,7 +57,7 @@ export default function CategoryCards() {
                                 style={[styles.icon, styles.ellipses]}
                                 onPress={openMenu} />}>
                         <Menu.Item onPress={() => { }} title="Edit" />
-                        <Menu.Item onPress={() => { }} title="Delete" />
+                        <Menu.Item onPress={onPressDelete} title="Delete" />
                     </Menu>
                 </View>
             </CustomAppBar>
