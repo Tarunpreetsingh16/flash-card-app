@@ -1,14 +1,13 @@
 import { Flashcard } from "@/data/FlashCard";
 import BottomSheet from "@gorhom/bottom-sheet";
-import { RefObject, useState } from "react";
+import { RefObject } from "react";
 import BottomSheetComponent from "./BottomSheet";
 import { StyleSheet, Text, View } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import { useAppDispatch } from "@/hooks/useAppDispatch";
 import { deleteFlashcard } from "@/store/reducers/flashcardSlice";
-import CustomModal from "./CustomModal";
-import UpdateCardModal from "./UpdateCardModal";
+import { useRouter } from "expo-router";
 
 type CardMoreOptionsProps = {
     selectedCard: Flashcard | null;
@@ -18,11 +17,11 @@ type CardMoreOptionsProps = {
 
 export default function CardMoreOptions({ selectedCard, bottomSheetRef, closeBottomSheet }: CardMoreOptionsProps) {
     const dispatch = useAppDispatch();
-    const [updateCardModalVisible, setUpdateCardModalVisible] = useState(false);
+    const router = useRouter();
 
     const openUpdateCardModal = () => {
         closeBottomSheet();
-        setUpdateCardModalVisible(true);
+        router.push(`/(update)?flashcardId=${selectedCard?.id}`);
     }
 
     const deleteCard = () => {
@@ -31,8 +30,6 @@ export default function CardMoreOptions({ selectedCard, bottomSheetRef, closeBot
         }
         closeBottomSheet();
     }
-
-    const closeUpdateCardModal = () => setUpdateCardModalVisible(false)
 
     const userCardOptions = () => {
         return (
@@ -69,12 +66,6 @@ export default function CardMoreOptions({ selectedCard, bottomSheetRef, closeBot
                     }
                 </View>
             </BottomSheetComponent>
-
-            <CustomModal visible={updateCardModalVisible} hideModal={closeUpdateCardModal}>
-                {selectedCard &&
-                    <UpdateCardModal flashcardToBeUpdated={selectedCard} closeModal={closeUpdateCardModal} />
-                }
-            </CustomModal>
         </>
     )
 }
