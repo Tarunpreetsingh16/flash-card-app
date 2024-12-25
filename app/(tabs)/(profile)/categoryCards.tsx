@@ -1,5 +1,7 @@
 import CardList from "@/components/CardList";
 import CustomAppBar from "@/components/CustomAppBar";
+import CustomModal from "@/components/CustomModal";
+import UpdateCategoryModal from "@/components/UpdateCategoryModal";
 import { Category } from "@/data/Category";
 import { useAppDispatch } from "@/hooks/useAppDispatch";
 import { useAppSelector } from "@/hooks/useAppSelector";
@@ -24,19 +26,31 @@ export default function CategoryCards() {
 
     useEffect(() => {
         if (flashcards && categoryIdString && !isNaN(parseInt(categoryIdString.trim()))) {
-            const categoryId: number = parseInt(categoryIdString.trim());
-            const category = categories.find((category) => category.id === categoryId);
-            setCategory(category);
+            const category = getCategory();
             const filteredFlashcards = flashcards.filter((card) => card.userId == userId && card.categoryId == category?.id);
             setCategoryFlashcards(filteredFlashcards.reverse());
         }
-    }, [])
+    }, [flashcards])
 
-    const [visible, setVisible] = React.useState(false);
+    useEffect(() => {
+        if (categoryIdString && !isNaN(parseInt(categoryIdString.trim()))) {
+            const category = getCategory();
+            setCategory(category);
+        }
+    }, [categories])
 
-    const openMenu = () => setVisible(true);
 
-    const closeMenu = () => setVisible(false);
+
+    const getCategory = (): Category | undefined => {
+        const categoryId: number = parseInt(categoryIdString.trim());
+        return categories.find((category) => category.id === categoryId);
+    }
+
+    const [menuVisible, setMenuVisible] = React.useState(false);
+    const [updateCardModalVisible, setUpdateCardModalVisible] = useState(false);
+
+    const openMenu = () => setMenuVisible(true);
+    const closeMenu = () => setMenuVisible(false);
 
     const onPressDelete = () => {
         if (category) {
@@ -45,18 +59,25 @@ export default function CategoryCards() {
         }
     }
 
+    const onPressEdit = () => {
+        setUpdateCardModalVisible(true);
+        closeMenu();
+    }
+
+    const closeUpdateCardModal = () => setUpdateCardModalVisible(false)
+
     return (
         <PaperProvider>
             <CustomAppBar title={category?.name ?? ""} isOnBackPressVisible>
                 <View>
                     <Menu
-                        visible={visible}
+                        visible={menuVisible}
                         onDismiss={closeMenu}
                         anchor={
                             <FontAwesome name="ellipsis-v"
                                 style={[styles.icon, styles.ellipses]}
                                 onPress={openMenu} />}>
-                        <Menu.Item onPress={() => { }} title="Edit" />
+                        <Menu.Item onPress={onPressEdit} title="Edit" />
                         <Menu.Item onPress={onPressDelete} title="Delete" />
                     </Menu>
                 </View>
@@ -70,6 +91,14 @@ export default function CategoryCards() {
                         </Text>
                     </View>
             }
+            <CustomModal visible={updateCardModalVisible} hideModal={closeUpdateCardModal}>
+                {
+                    category
+                    && <UpdateCategoryModal 
+                    categoryToBeUpdated={category}
+                        closeModal={closeUpdateCardModal} />
+                }
+            </CustomModal>
         </PaperProvider>
     )
 }

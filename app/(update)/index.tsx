@@ -95,7 +95,7 @@ const UpdateCard: React.FC = () => {
     return (
         <>
             <CustomAppBar title="Update Card" isOnBackPressVisible>
-                <Text onPress={handleSubmit} style={styles.createCard}>Update</Text>
+                <Text onPress={handleSubmit} style={styles.createCard}>Save</Text>
             </CustomAppBar>
 
             <ScrollView style={styles.container}
