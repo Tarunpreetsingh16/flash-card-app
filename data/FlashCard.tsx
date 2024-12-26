@@ -1,4 +1,3 @@
-import { Category } from "./Category";
 import { Option } from "./Option";
 
 export interface Flashcard {
@@ -11,6 +10,7 @@ export interface Flashcard {
     isPrivate: boolean;
     options: Option[];
     categoryId: number
+    favorite?: boolean;
     likes?: number;
     dislikes?: number;
     shares?: number;

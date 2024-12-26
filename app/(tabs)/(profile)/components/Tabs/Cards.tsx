@@ -1,13 +1,19 @@
 import PressableOptionItem from "@/components/PressableOptionItem";
 import { useRouter } from "expo-router";
 import React from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Vibration, View } from "react-native";
 
 export default function Cards() {
     const router = useRouter();
 
     const routeToUserCards = () => {
+        Vibration.vibrate(50)
         router.push('/(tabs)/(profile)/userCards')
+    }
+
+    const routeToFavoriteCards = () => {
+        Vibration.vibrate(50)
+        router.push('/(tabs)/(profile)/userCards?favorite=true')
     }
 
     return (
@@ -16,7 +22,7 @@ export default function Cards() {
                 <PressableOptionItem label="My Cards" onPress={routeToUserCards} />
             </View>
             <View style={styles.optionContainer}>
-                <PressableOptionItem label="Starred Cards" onPress={() => console.log("starred cards")} />
+                <PressableOptionItem label="Favorite Cards" onPress={routeToFavoriteCards} />
             </View>
             <View style={styles.optionContainer}>
                 <PressableOptionItem label="Saved Cards" onPress={() => console.log("saved cards")} />

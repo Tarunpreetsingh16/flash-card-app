@@ -8,6 +8,7 @@ import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import { useAppDispatch } from "@/hooks/useAppDispatch";
 import { deleteFlashcard } from "@/store/reducers/flashcardSlice";
 import { useRouter } from "expo-router";
+import React from "react";
 
 type CardMoreOptionsProps = {
     selectedCard: Flashcard | null;

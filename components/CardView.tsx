@@ -1,7 +1,9 @@
 import { Flashcard } from "@/data/FlashCard";
-import { FontAwesome } from "@expo/vector-icons";
-import { useEffect, useState } from "react";
-import { Button, Image, Pressable, StyleProp, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, Vibration, View, ViewStyle } from "react-native";
+import { useAppDispatch } from "@/hooks/useAppDispatch";
+import { toggleFavorite } from "@/store/reducers/flashcardSlice";
+import { FontAwesome, Ionicons } from "@expo/vector-icons";
+import { useState } from "react";
+import { Image, Pressable, StyleProp, StyleSheet, Text, Vibration, View, ViewStyle } from "react-native";
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from "react-native-reanimated";
 
 interface CardViewData {
@@ -11,7 +13,7 @@ interface CardViewData {
 }
 
 export default function CardView(cardViewData: CardViewData) {
-
+    const dispatch = useAppDispatch();
     const rotation = useSharedValue(0); // Initialize rotation
     const [isFlipped, setIsFlipped] = useState(false);
 
@@ -42,6 +44,11 @@ export default function CardView(cardViewData: CardViewData) {
         cardViewData.openMoreOptions();
     }
 
+    const onFavoritePress = () => {
+        Vibration.vibrate(50)
+        dispatch(toggleFavorite(flashCard.id));
+    }
+
     const { flashCard, style } = cardViewData;
 
     return (
@@ -54,18 +61,32 @@ export default function CardView(cardViewData: CardViewData) {
                     <Text style={styles.username}>jimmy._96</Text>
                 </View>
                 <View style={styles.cardHeaderRight}>
+                    {
+                        flashCard.userId === 0
+                        && <Ionicons
+                            name={flashCard.favorite ? "heart" : "heart-outline"}
+                            style={[styles.icon]}
+                            onPress={onFavoritePress} />
+                    }
                     {flashCard.isPrivate && <FontAwesome name="lock" style={[styles.icon]} />}
                     <FontAwesome name="ellipsis-v" style={[styles.icon, styles.ellipses]} onPress={triggerOpen} />
                 </View>
             </View>
-            <Animated.View style={[styles.flashcardItem, styles.mainContent, style, !isFlipped ? frontStyle : backStyle, { pointerEvents: 'box-none' }]} >
-                <Text style={[styles.questionAndAnswer]}>Q: {flashCard.front}</Text>
-                {
-                    isFlipped
-                    && <Text style={[styles.questionAndAnswer, styles.answer]}>A: {flashCard.back}</Text>
-                }
-                {flashCard.imageUri && flashCard.imageUri.trim().length != 0 ? <Image source={{ uri: flashCard.imageUri }} style={styles.postPicture} /> : null}
-            </Animated.View>
+            <Pressable onPress={isFlipped ? showFront : showBack} >
+                <Animated.View
+                    style={[styles.flashcardItem,
+                    styles.mainContent, style,
+                    !isFlipped ? frontStyle : backStyle,
+                    { pointerEvents: 'box-none' }
+                    ]} >
+                    <Text style={[styles.questionAndAnswer]}>Q: {flashCard.front}</Text>
+                    {
+                        isFlipped
+                        && <Text style={[styles.questionAndAnswer, styles.answer]}>A: {flashCard.back}</Text>
+                    }
+                    {flashCard.imageUri && flashCard.imageUri.trim().length != 0 ? <Image source={{ uri: flashCard.imageUri }} style={styles.postPicture} /> : null}
+                </Animated.View>
+            </Pressable>
 
             <View style={styles.attributes}>
                 <View style={styles.cardAttributes}>
@@ -84,17 +105,14 @@ export default function CardView(cardViewData: CardViewData) {
                         <Text>{flashCard.shares}</Text>
                     </View>
                 </View>
-                <View style={styles.otherAttributes}>
-                    <FontAwesome name="bookmark" style={styles.icon} />
-                </View>
-            </View>
-            <Pressable style={[styles.cardBottom]}
-                onPress={isFlipped ? showFront : showBack}
-                delayLongPress={500}>
                 {
-                    <Text style={styles.flipButton}>FLIP</Text>
+                    flashCard.userId != 0
+                        ? <View style={styles.otherAttributes}>
+                            <FontAwesome name="bookmark" style={styles.icon} />
+                        </View>
+                        : null
                 }
-            </Pressable>
+            </View>
         </View>
     )
 }
