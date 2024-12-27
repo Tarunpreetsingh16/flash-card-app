@@ -1,53 +1,59 @@
 
-import { StyleSheet, useWindowDimensions } from 'react-native';
-import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
+import { SafeAreaView, StyleSheet, View } from 'react-native';
 import Categories from './Tabs/Categories';
 import Cards from './Tabs/Cards';
-import React from 'react';
+import React, { useMemo } from 'react';
+import { SegmentedButtons } from 'react-native-paper';
 
-const CardsRoute = () => (
-    <Cards />
-);
+type Route = {
+    value: string,
+    scene: React.ReactNode
+}
 
-const CategoriesRoute = () => (
-    <Categories />
-);
-
-const renderScene = SceneMap({
-    cardsRoute: CardsRoute,
-    categoriesRoute: CategoriesRoute,
-});
-
-const routes = [
-    { key: 'cardsRoute', title: 'Cards' },
-    { key: 'categoriesRoute', title: 'Categories' },
-];
+const routes = new Map<string, Route>([
+    ['cards', { value: 'cards', scene: <Cards /> }],
+    ['categories', { value: 'categories', scene: <Categories /> }],
+]);
 
 export default function Tabs() {
-    const layout = useWindowDimensions();
-    const [index, setIndex] = React.useState(0);
+    const [value, setValue] = React.useState('cards');
+    const scene = useMemo(() => {
+        const route = routes.get(value);
+        return route?.scene;
+    }, [value]);
 
     return (
-        <TabView
-            navigationState={{ index, routes }}
-            renderScene={renderScene}
-            onIndexChange={setIndex}
-            initialLayout={{ width: layout.width }}
-            renderTabBar={(props) => (
-                <TabBar
-                    {...props}
-                    style={[styles.tabBar]} // Tab bar background color
-                    indicatorStyle={[styles.indicator]} // Active tab indicator color
-                />
-            )}
-
-        />
+        <SafeAreaView style={styles.container}>
+            <SegmentedButtons
+                value={value}
+                onValueChange={setValue}
+                style={styles.tabBar}
+                buttons={[
+                    {
+                        value: 'cards',
+                        label: 'Cards',
+                        checkedColor: 'white',
+                        style: value === 'cards' && styles.selectedButton
+                    },
+                    {
+                        value: 'categories',
+                        label: 'Categories',
+                        checkedColor: 'white',
+                        style: value === 'categories' && styles.selectedButton
+                    },
+                ]}
+            />
+            <View style={styles.scene}>
+                {scene}
+            </View>
+        </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
     tabBar: {
-        backgroundColor: '#5F7470'
+        width: '80%',
+        alignSelf: 'center',
     },
     indicator: {
         backgroundColor: "white",
@@ -55,4 +61,13 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 10,
         borderTopLeftRadius: 10,
     },
+    container: {
+        flex: 1,
+    },
+    selectedButton: {
+        backgroundColor: '#5F7470',
+    },
+    scene: {
+        marginVertical: 5,
+    }
 });

@@ -2,6 +2,7 @@ import { StyleSheet, View } from "react-native";
 import CustomAppBar from "@/components/CustomAppBar";
 import Tabs from "./components/Tabs";
 import ProfileHeader from "./components/ProfileHeader";
+import React from "react";
 
 export default function ProfileScreen() {
 

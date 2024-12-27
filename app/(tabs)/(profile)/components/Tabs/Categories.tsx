@@ -10,7 +10,7 @@ const Categories = () => {
     const router = useRouter();
 
     const onCategoryPress = (category: Category) => {
-        router.push(`/(profile)/categoryCards?id=${category.id}`)
+        router.push(`/(tabs)/(profile)/categoryCards?id=${category.id}`)
     }
 
     return (
