@@ -69,5 +69,6 @@ const styles = StyleSheet.create({
     },
     scene: {
         marginVertical: 5,
+        flex: 1
     }
 });

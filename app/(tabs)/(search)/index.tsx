@@ -1,7 +1,9 @@
 import CustomAppBar from "@/components/CustomAppBar";
+import LabelTextInput from "@/components/LabelTextInput";
+import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import { StyleSheet, TextInput } from "react-native";
+import { SafeAreaView, StyleSheet, TextInput } from "react-native";
 
 
 const Search: React.FC = () => {
@@ -17,15 +19,16 @@ const Search: React.FC = () => {
     return (
         <>
             <CustomAppBar title="Search" />
-
-            <TextInput
-                style={styles.inputField}
-                value={searchText}
-                placeholder="Search a tag"
-                onChangeText={setSearchText}
-                returnKeyType="search"
-                onSubmitEditing={searchCards}
-            />
+            <SafeAreaView style={styles.container}>
+                <LabelTextInput
+                    placeholder="e.g. Planets"
+                    value={searchText}
+                    onChange={setSearchText}
+                    returnKeyType="search"
+                    onSubmitEditing={searchCards} >
+                    <Ionicons name="search" size={24} color="black" onPress={searchCards} />
+                </LabelTextInput>
+            </SafeAreaView>
         </>
     )
 }
@@ -33,7 +36,11 @@ const Search: React.FC = () => {
 const styles = StyleSheet.create({
     inputField: {
         borderWidth: 1
-    }
+    },
+    container: {
+        paddingHorizontal: 5,
+        margin: 8
+    },
 })
 
 export default Search;
