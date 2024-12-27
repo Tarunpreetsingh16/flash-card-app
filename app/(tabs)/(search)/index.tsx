@@ -4,15 +4,23 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { SafeAreaView, StyleSheet, TextInput } from "react-native";
+import { Snackbar } from "react-native-paper";
 
 
 const Search: React.FC = () => {
     const [searchText, setSearchText] = useState('');
     const router = useRouter();
+    const [visible, setVisible] = useState(false);
+
+    const onToggleSnackBar = () => setVisible(!visible);
+    const onDismissSnackBar = () => setVisible(false);
 
     const searchCards = () => {
         if (searchText && searchText.trim().length != 0) {
             router.push(`/searchResult?keyword=${searchText}`);
+        }
+        else {
+            onToggleSnackBar()
         }
     }
 
@@ -29,6 +37,12 @@ const Search: React.FC = () => {
                     <Ionicons name="search" size={24} color="black" onPress={searchCards} />
                 </LabelTextInput>
             </SafeAreaView>
+            <Snackbar
+                visible={visible}
+                onDismiss={onDismissSnackBar}
+                duration={3000}>
+                Please enter a search term
+            </Snackbar>
         </>
     )
 }

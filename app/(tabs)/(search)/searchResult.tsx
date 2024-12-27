@@ -5,6 +5,8 @@ import { useFocusEffect } from 'expo-router';
 import { Flashcard } from '@/data/FlashCard';
 import CardView from '@/components/CardView';
 import { useSearchParams } from 'expo-router/build/hooks';
+import CustomAppBar from '@/components/CustomAppBar';
+import CardList from '@/components/CardList';
 
 
 const FlashcardList: React.FC = () => {
@@ -34,16 +36,11 @@ const FlashcardList: React.FC = () => {
 
     }, []));
 
-    const renderItem = ({ item }: { item: Flashcard }) => (
-        <CardView flashCard={item} />
-    );
-
     return (
-        <FlatList
-            data={flashcards}
-            renderItem={renderItem}
-            keyExtractor={(item) => item.id.toString()}
-        />
+        <>
+            <CustomAppBar title="Result" isOnBackPressVisible/>
+            <CardList flashcards={flashcards} />
+        </>
     );
 };
 
