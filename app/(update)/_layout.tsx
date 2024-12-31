@@ -1,4 +1,5 @@
 import { Stack } from "expo-router";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 export default function UpdateStackLayout() {
     return (
@@ -7,6 +8,11 @@ export default function UpdateStackLayout() {
                 options={{
                     headerShown: false
                 }} />
+            <Stack.Screen name="changeCategory"
+                options={{
+                    headerShown: false,
+                    gestureEnabled: true,
+                }} />
         </Stack>
-    );
+    )
 }

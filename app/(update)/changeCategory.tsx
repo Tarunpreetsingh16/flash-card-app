@@ -1,45 +1,46 @@
-import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { StyleSheet, ScrollView, Text, Alert, Vibration } from 'react-native';
+import React, { useEffect, useMemo, useState } from 'react';
+import { StyleSheet, Text, Alert, Vibration } from 'react-native';
 import { Flashcard } from '@/data/FlashCard';
-import LabelTextInput from '@/components/LabelTextInput';
-import CustomImagePicker from '@/components/CustomImagePicker';
 import { useRouter } from 'expo-router';
-import CustomSwitch from '@/components/CustomLabelSwitch';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
-import { addFlashcard } from '@/store/reducers/flashcardSlice';
+import { updateFlashcard } from '@/store/reducers/flashcardSlice';
 import { Category } from '@/data/Category';
 import { useAppSelector } from '@/hooks/useAppSelector';
 import { RootState } from '@/store';
 import SearchableDropdown, { SearchableDropdownItem } from '@/components/SearchableDropdown';
 import { addCategory } from '@/store/reducers/categorySlice';
 import CustomAppBar from '@/components/CustomAppBar';
+import { useSearchParams } from 'expo-router/build/hooks';
+import { ScrollView } from 'react-native-gesture-handler';
 
-const AddCard: React.FC = () => {
-    const getFlashcard = () => {
-        const newFlashcard: Flashcard = {
-            id: 0,
-            userId: 0,
-            front: '',
-            back: '',
-            tags: [],
-            imageUri: null,
-            isPrivate: false,
-            options: [],
-            categoryId: 0
-        }
-
-        return newFlashcard;
-    }
-
-    const [flashcard, setFlashcard] = useState(getFlashcard());
+const ChangeCategory: React.FC = () => {
     const router = useRouter();
     const dispatch = useAppDispatch();
     const categories = useAppSelector((state: RootState) => state.categories.categories)
+    const flashcards = useAppSelector((state: RootState) => state.flashcards.flashcards)
     const categoryNextId = useAppSelector((state: RootState) => state.categories.nextId)
     const [searchTerm, setSearchTerm] = useState('');
     const [debouncedTerm, setDebouncedTerm] = useState(searchTerm);
     const [category, setCategory] = useState<Category | null>();
+
+    const params = useSearchParams();
+    const flashcardIdString = params.get("flashcardId");
+    const [flashcard, setFlashcard] = useState<Flashcard>();
     const userId = 0;
+
+    useEffect(() => {
+        if (flashcardIdString) {
+            const flashcardId = parseInt(flashcardIdString);
+            for (let i = 0; i < flashcards.length; i++) {
+                const card: Flashcard = flashcards[i];
+                if (card.id === flashcardId) {
+                    setFlashcard(card);
+                }
+            }
+        }
+    }, []);
+
+    console.log(category);
 
     React.useEffect(() => {
         const handler = setTimeout(() => {
@@ -68,7 +69,7 @@ const AddCard: React.FC = () => {
 
     const handleSubmit = async () => {
         Vibration.vibrate(10);
-        if (!flashcard.front || !flashcard.back) {
+        if (!category && !searchTerm.trim().length) {
             Alert.alert(
                 '',
                 'Please fill all the fields'
@@ -79,62 +80,24 @@ const AddCard: React.FC = () => {
         if (!selectedCategory) {
             selectedCategory = {
                 id: categoryNextId,
-                name: searchTerm.trim(),
+                name: searchTerm,
                 userId: userId
             } as Category;
             dispatch(addCategory(selectedCategory))
         }
-        console.log({ second: selectedCategory });
 
         try {
-            const newFlashcard: Flashcard = {
-                id: 0,
-                userId: userId,
-                front: flashcard.front,
-                back: flashcard.back,
-                tags: flashcard.tags,
-                imageUri: flashcard.imageUri,
-                isPrivate: flashcard.isPrivate,
-                options: [],
-                categoryId: selectedCategory.id
-            }
-            console.log("newFlashcard", newFlashcard);
-            dispatch(addFlashcard(newFlashcard));
+            if (flashcard) {
+                const newFlashcard = { ...flashcard };
+                newFlashcard.categoryId = selectedCategory.id;
 
-            updateFlashcard();
-            router.push("/(tabs)");
+                dispatch(updateFlashcard(newFlashcard));
+                router.back();
+            }
         } catch (error) {
-            console.error('Error creating flashcard:', error);
+            console.error('Error updating flashcard:', error);
         }
     };
-
-
-    const updateFront = (front: string) => {
-        const updatedCard = { ...flashcard, front };
-        setFlashcard(updatedCard);
-    }
-
-    const updateBack = (back: string) => {
-        const updatedCard = { ...flashcard, back };
-        setFlashcard(updatedCard);
-    }
-
-    const updateImageUri = (imageUri: string | null) => {
-        const updatedCard = { ...flashcard, imageUri };
-        setFlashcard(updatedCard);
-    }
-
-    const updateIsPrivate = (isPrivate: boolean) => {
-        const updatedCard = { ...flashcard, isPrivate };
-        setFlashcard(updatedCard);
-    }
-
-    const updateFlashcard = () => {
-        setFlashcard(getFlashcard());
-        setSearchTerm('');
-        setCategory(null);
-        setDebouncedTerm(searchTerm);
-    }
 
     const updateSearchTerm = (val: string) => {
         setSearchTerm(val);
@@ -148,26 +111,15 @@ const AddCard: React.FC = () => {
 
     return (
         <>
-            <CustomAppBar title="Add Card">
-                <Text onPress={handleSubmit} style={styles.createCard}>Create</Text>
+            <CustomAppBar title="Change Category" isOnBackPressVisible>
+                <Text onPress={handleSubmit} style={styles.createCard}>Save</Text>
             </CustomAppBar>
 
             <ScrollView style={styles.container}
                 showsVerticalScrollIndicator={false}
-                showsHorizontalScrollIndicator={false}>
-                <LabelTextInput
-                    placeholder="Front of flashcard..."
-                    value={flashcard.front}
-                    onChange={updateFront}
-                    label='Question'
-                />
-                <LabelTextInput
-                    placeholder="Correct answer..."
-                    value={flashcard.back}
-                    onChange={updateBack}
-                    label='Answer'
-                />
-                <CustomSwitch isSwitchOn={flashcard.isPrivate} onSwitchToggle={updateIsPrivate} />
+                showsHorizontalScrollIndicator={false}
+                
+            >
                 <SearchableDropdown
                     label='Category'
                     onValueChange={updateSearchTerm}
@@ -175,10 +127,6 @@ const AddCard: React.FC = () => {
                     searchKey={searchTerm}
                     hits={filteredCategories}
                     onOptionSelect={updateCategory}
-                />
-                <CustomImagePicker
-                    imageUri={flashcard.imageUri}
-                    setImageUri={updateImageUri}
                 />
             </ScrollView>
         </>
@@ -199,4 +147,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default AddCard;
+export default ChangeCategory;

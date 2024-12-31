@@ -3,7 +3,7 @@ import BottomSheet from "@gorhom/bottom-sheet";
 import { RefObject } from "react";
 import BottomSheetComponent from "./BottomSheet";
 import { StyleSheet, Text, View } from "react-native";
-import { FontAwesome } from "@expo/vector-icons";
+import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import { useAppDispatch } from "@/hooks/useAppDispatch";
 import { deleteFlashcard } from "@/store/reducers/flashcardSlice";
@@ -20,9 +20,14 @@ export default function CardMoreOptions({ selectedCard, bottomSheetRef, closeBot
     const dispatch = useAppDispatch();
     const router = useRouter();
 
-    const openUpdateCardModal = () => {
+    const routeToUpdateCard = () => {
         closeBottomSheet();
         router.push(`/(update)?flashcardId=${selectedCard?.id}`);
+    }
+
+    const routeToChangeCategory = () => {
+        closeBottomSheet();
+        router.push(`/(update)/changeCategory?flashcardId=${selectedCard?.id}`);
     }
 
     const deleteCard = () => {
@@ -35,8 +40,14 @@ export default function CardMoreOptions({ selectedCard, bottomSheetRef, closeBot
     const userCardOptions = () => {
         return (
             <>
-                <OptionIconLabel label="Edit" onPress={openUpdateCardModal}>
+                <OptionIconLabel label="Edit" onPress={routeToUpdateCard}>
                     <FontAwesome name="pencil" style={[styles.icon]} />
+                </OptionIconLabel>
+
+                <OptionIconLabel label="Change category" onPress={routeToChangeCategory}>
+                    <Ionicons
+                        name={"shapes"}
+                        style={[styles.icon]} />
                 </OptionIconLabel>
 
                 <OptionIconLabel label="Delete" onPress={deleteCard}>
@@ -93,7 +104,7 @@ const styles = StyleSheet.create({
     },
     icon: {
         fontSize: 18,
-        width: 25 // Space between icon and text
+        width: 30,
     },
     optionContainer: {
         flexDirection: 'row',

@@ -21,8 +21,6 @@ const categorySlice = createSlice({
                 state.categories = [];
             }
             const category = action.payload;
-            category.id = state.nextId;
-            category.name = category.name.trim();
             state.categories.push(category);
             state.nextId = state.categories.length > 0 ? state.categories[state.categories.length - 1].id + 1 : 0
             console.log(`Successfully created new category with id ${category.id}, next id=${state.nextId}`);
