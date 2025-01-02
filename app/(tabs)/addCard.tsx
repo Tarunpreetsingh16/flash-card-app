@@ -53,7 +53,7 @@ const AddCard: React.FC = () => {
         const lowercasedTerm = debouncedTerm.toLowerCase();
         categories.forEach((category) => {
             if (lowercasedTerm
-                && lowercasedTerm.trim().length > 2
+                && lowercasedTerm.trim().length > 0
                 && category.name.toLowerCase().includes(lowercasedTerm)) {
                 const idx = filteredCategories.length === 0 ? 0 : filteredCategories.length + 1;
                 const item: SearchableDropdownItem = {
