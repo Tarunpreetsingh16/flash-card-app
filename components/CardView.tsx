@@ -68,8 +68,16 @@ export default function CardView(cardViewData: CardViewData) {
                             style={[styles.icon]}
                             onPress={onFavoritePress} />
                     }
-                    {flashCard.isPrivate && <FontAwesome name="lock" style={[styles.icon]} />}
-                    <FontAwesome name="ellipsis-v" style={[styles.icon, styles.ellipses]} onPress={triggerOpen} />
+                    {flashCard.isPrivate &&
+                        <Ionicons name="lock-closed"
+                            style={[styles.icon]}
+                            size={24}
+                            onPress={() => { }} />}
+                    <Ionicons name="ellipsis-vertical"
+                        size={24}
+                        style={[styles.icon, styles.ellipses]}
+                        color="black"
+                        onPress={triggerOpen} />
                 </View>
             </View>
             <Pressable onPress={isFlipped ? showFront : showBack} >
@@ -91,24 +99,41 @@ export default function CardView(cardViewData: CardViewData) {
             <View style={styles.attributes}>
                 <View style={styles.cardAttributes}>
                     <View style={styles.attributeView}>
-                        <FontAwesome name="thumbs-o-up" style={styles.icon} />
+                        <Ionicons name="arrow-up-circle-outline"
+                            style={[styles.icon]}
+                            size={24}
+                            color={'green'}
+                            onPress={() => { }} />
                         <Text>{flashCard.likes}</Text>
                     </View>
 
                     <View style={styles.attributeView}>
-                        <FontAwesome name="thumbs-o-down" style={styles.icon} />
+                        <Ionicons name="arrow-down-circle-outline"
+                            style={[styles.icon]}
+                            size={24}
+                            color={'black'}
+                            onPress={() => { }} />
                         <Text>{flashCard.dislikes}</Text>
                     </View>
 
                     <View style={styles.attributeView}>
-                        <FontAwesome name="share" style={styles.icon} />
+
+                        <Ionicons name="share-outline"
+                            style={[styles.icon]}
+                            size={24}
+                            color={'black'}
+                            onPress={() => { }} />
                         <Text>{flashCard.shares}</Text>
                     </View>
                 </View>
                 {
                     flashCard.userId != 0
                         ? <View style={styles.otherAttributes}>
-                            <FontAwesome name="bookmark" style={styles.icon} />
+                            <Ionicons name="bookmark-outline"
+                                style={[styles.icon]}
+                                size={24}
+                                color="black"
+                                onPress={() => { }} />
                         </View>
                         : null
                 }

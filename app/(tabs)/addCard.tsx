@@ -34,12 +34,12 @@ const AddCard: React.FC = () => {
     const [flashcard, setFlashcard] = useState(getFlashcard());
     const router = useRouter();
     const dispatch = useAppDispatch();
-    const categories = useAppSelector((state: RootState) => state.categories.categories)
     const categoryNextId = useAppSelector((state: RootState) => state.categories.nextId)
     const [searchTerm, setSearchTerm] = useState('');
     const [debouncedTerm, setDebouncedTerm] = useState(searchTerm);
     const [category, setCategory] = useState<Category | null>();
-    const userId = 0;
+    const userId = 1;
+    const categories = useAppSelector((state: RootState) => state.categories.categories).filter((category) => category.userId == 0);
 
     React.useEffect(() => {
         const handler = setTimeout(() => {
@@ -88,7 +88,7 @@ const AddCard: React.FC = () => {
 
         try {
             const newFlashcard: Flashcard = {
-                id: 0,
+                id: userId,
                 userId: userId,
                 front: flashcard.front,
                 back: flashcard.back,

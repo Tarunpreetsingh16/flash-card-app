@@ -7,7 +7,7 @@ import { useAppDispatch } from "@/hooks/useAppDispatch";
 import { useAppSelector } from "@/hooks/useAppSelector";
 import { RootState } from "@/store";
 import { deleteCategory } from "@/store/reducers/categorySlice";
-import { FontAwesome } from "@expo/vector-icons";
+import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { useRouter, useSearchParams } from "expo-router/build/hooks";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
@@ -74,16 +74,19 @@ export default function CategoryCards() {
                         visible={menuVisible}
                         onDismiss={closeMenu}
                         anchor={
-                            <FontAwesome name="ellipsis-v"
+                            <Ionicons name="ellipsis-vertical"
+                                size={24}
                                 style={[styles.icon, styles.ellipses]}
-                                onPress={openMenu} />}>
+                                color="black"
+                                onPress={openMenu} />
+                        }>
                         <Menu.Item onPress={onPressEdit} title="Edit" />
                         <Menu.Item onPress={onPressDelete} title="Delete" />
                     </Menu>
                 </View>
             </CustomAppBar>
             {
-                flashcards.length > 0
+                categoryFlashcards.length > 0
                     ? <CardList flashcards={categoryFlashcards} />
                     : <View style={styles.noCardView}>
                         <Text style={styles.noCardMessage}>
@@ -94,8 +97,8 @@ export default function CategoryCards() {
             <CustomModal visible={updateCardModalVisible} hideModal={closeUpdateCardModal}>
                 {
                     category
-                    && <UpdateCategoryModal 
-                    categoryToBeUpdated={category}
+                    && <UpdateCategoryModal
+                        categoryToBeUpdated={category}
                         closeModal={closeUpdateCardModal} />
                 }
             </CustomModal>

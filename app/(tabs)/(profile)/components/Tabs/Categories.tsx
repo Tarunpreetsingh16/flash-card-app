@@ -3,13 +3,14 @@ import { Category } from "@/data/Category";
 import { useAppSelector } from "@/hooks/useAppSelector";
 import { useRouter } from "expo-router";
 import React from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { ScrollView, StyleSheet, Vibration, View } from "react-native";
 
 const Categories = () => {
-    const categories = useAppSelector((state) => state.categories.categories)
+    const categories = useAppSelector((state) => state.categories.categories).filter((category) => category.userId === 0);
     const router = useRouter();
 
     const onCategoryPress = (category: Category) => {
+        Vibration.vibrate(50);
         router.push(`/(tabs)/(profile)/categoryCards?id=${category.id}`)
     }
 
