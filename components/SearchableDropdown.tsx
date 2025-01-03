@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { Keyboard, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Keyboard, StyleSheet, Text, View } from 'react-native';
 import LabelTextInput from './LabelTextInput';
-import { GestureHandlerRootView, TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { GestureHandlerRootView, ScrollView, TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 type SearchableDropdownProps = {
     searchKey: string;
@@ -37,8 +37,7 @@ const SearchableDropdown = ({
     }, [hits])
 
     const onPress = (hit: SearchableDropdownItem) => {
-        console.log({hit});
-        Keyboard.dismiss(); // Close the keyboard
+        Keyboard.dismiss()
         onValueChange(hit.name);
         onOptionSelect(hit.id);
         optionsContainerHiddenRef.current = true
@@ -54,21 +53,24 @@ const SearchableDropdown = ({
             />
             {optionsContainerVisible
                 &&
-                <ScrollView style={styles.optionsContainer}>
-                    {
-                        hits.map((hit) => {
-                            return (
-                                <GestureHandlerRootView key={hit.id}>
+                <GestureHandlerRootView style={styles.optionsContainer}>
+                    <ScrollView
+                        nestedScrollEnabled={true}
+                        keyboardShouldPersistTaps="handled">
+                        {
+                            hits.map((hit) => {
+                                return (
                                     <TouchableWithoutFeedback
                                         style={styles.optionText}
-                                        onPress={() => onPress(hit)}>
+                                        onPress={() => onPress(hit)}
+                                        key={hit.id}>
                                         <Text>{hit.name}</Text>
                                     </TouchableWithoutFeedback>
-                                </GestureHandlerRootView>
-                            )
-                        })
-                    }
-                </ScrollView>
+                                )
+                            })
+                        }
+                    </ScrollView>
+                </GestureHandlerRootView>
             }
 
         </View >
@@ -82,10 +84,11 @@ const styles = StyleSheet.create({
         top: '90%',
         left: 0,
         right: 0,
-        zIndex: 10,
+        zIndex: 1000,
         borderWidth: 0.3,
         elevation: 5,
-        height: 120
+        height: 120,
+
     },
     optionText: {
         paddingHorizontal: 15,
