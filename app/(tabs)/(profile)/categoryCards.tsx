@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
         fontStyle: 'italic',
     },
     icon: {
-        fontSize: 18,
+        fontSize: 20,
         paddingHorizontal: 10,
         color: 'black'
     },
