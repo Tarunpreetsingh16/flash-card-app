@@ -2,6 +2,7 @@ import PressableOptionItem from "@/components/PressableOptionItem";
 import { useRouter } from "expo-router";
 import React from "react";
 import { ScrollView, StyleSheet, Vibration, View } from "react-native";
+import { Divider } from "react-native-paper";
 
 export default function Cards() {
     const router = useRouter();
@@ -21,12 +22,15 @@ export default function Cards() {
             <View style={styles.optionContainer}>
                 <PressableOptionItem label="My Cards" onPress={routeToUserCards} />
             </View>
+            <Divider />
             <View style={styles.optionContainer}>
                 <PressableOptionItem label="Favorite Cards" onPress={routeToFavoriteCards} />
             </View>
+            <Divider />
             <View style={styles.optionContainer}>
                 <PressableOptionItem label="Saved Cards" onPress={() => console.log("saved cards")} />
             </View>
+            <Divider />
         </ScrollView>
     )
 }

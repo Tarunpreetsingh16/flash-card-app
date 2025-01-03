@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         borderColor: 'grey',
-        marginVertical: 15,
+        marginVertical: 5,
         justifyContent: 'space-between',
         paddingVertical: 5,
     },

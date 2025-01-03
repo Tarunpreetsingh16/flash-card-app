@@ -4,6 +4,7 @@ import { useAppSelector } from "@/hooks/useAppSelector";
 import { useRouter } from "expo-router";
 import React from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
+import { Divider } from "react-native-paper";
 
 const Categories = () => {
     const categories = useAppSelector((state) => state.categories.categories)
@@ -24,6 +25,7 @@ const Categories = () => {
                             <PressableOptionItem
                                 label={`${category.name}`}
                                 onPress={() => onCategoryPress(category)} />
+                                <Divider />
                         </View>
                     )
                 })

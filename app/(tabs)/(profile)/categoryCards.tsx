@@ -83,7 +83,7 @@ export default function CategoryCards() {
                 </View>
             </CustomAppBar>
             {
-                flashcards.length > 0
+                categoryFlashcards.length > 0
                     ? <CardList flashcards={categoryFlashcards} />
                     : <View style={styles.noCardView}>
                         <Text style={styles.noCardMessage}>
