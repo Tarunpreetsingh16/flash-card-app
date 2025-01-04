@@ -1,9 +1,8 @@
-import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import React, { useMemo,useState } from 'react';
 import { StyleSheet, ScrollView, Text, Alert, Vibration } from 'react-native';
 import { Flashcard } from '@/data/FlashCard';
 import LabelTextInput from '@/components/LabelTextInput';
 import CustomImagePicker from '@/components/CustomImagePicker';
-import { useRouter } from 'expo-router';
 import CustomSwitch from '@/components/CustomLabelSwitch';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { addFlashcard } from '@/store/reducers/flashcardSlice';
@@ -13,8 +12,12 @@ import { RootState } from '@/store';
 import SearchableDropdown, { SearchableDropdownItem } from '@/components/SearchableDropdown';
 import { addCategory } from '@/store/reducers/categorySlice';
 import CustomAppBar from '@/components/CustomAppBar';
-
-const AddCard: React.FC = () => {
+type AddCardScreenProps = {
+    routeToFeedScreen: () => void;
+}
+const AddCardScreen = ({
+    routeToFeedScreen
+}: AddCardScreenProps) => {
     const getFlashcard = () => {
         const newFlashcard: Flashcard = {
             id: 0,
@@ -32,13 +35,13 @@ const AddCard: React.FC = () => {
     }
 
     const [flashcard, setFlashcard] = useState(getFlashcard());
-    const router = useRouter();
     const dispatch = useAppDispatch();
     const categoryNextId = useAppSelector((state: RootState) => state.categories.nextId)
+    const flashcardNextId = useAppSelector((state: RootState) => state.flashcards.nextId)
     const [searchTerm, setSearchTerm] = useState('');
     const [debouncedTerm, setDebouncedTerm] = useState(searchTerm);
     const [category, setCategory] = useState<Category | null>();
-    const userId = 1;
+    const userId = 0;
     const categories = useAppSelector((state: RootState) => state.categories.categories).filter((category) => category.userId == 0);
 
     React.useEffect(() => {
@@ -88,7 +91,7 @@ const AddCard: React.FC = () => {
 
         try {
             const newFlashcard: Flashcard = {
-                id: userId,
+                id: flashcardNextId,
                 userId: userId,
                 front: flashcard.front,
                 back: flashcard.back,
@@ -102,7 +105,7 @@ const AddCard: React.FC = () => {
             dispatch(addFlashcard(newFlashcard));
 
             updateFlashcard();
-            router.push("/(tabs)");
+            routeToFeedScreen();
         } catch (error) {
             console.error('Error creating flashcard:', error);
         }
@@ -199,4 +202,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default AddCard;
+export default AddCardScreen;

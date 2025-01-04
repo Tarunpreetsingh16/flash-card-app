@@ -21,7 +21,6 @@ const flashcardSlice = createSlice({
                 state.flashcards = [];
             }
             const flashcard = action.payload;
-            flashcard.id = state.nextId;
             state.flashcards.push(flashcard)
             state.nextId = state.flashcards.length > 0 ? state.flashcards[state.flashcards.length - 1].id + 1 : 0
             console.log(`Successfully created new card with id ${flashcard.id}, next id=${state.nextId}`);

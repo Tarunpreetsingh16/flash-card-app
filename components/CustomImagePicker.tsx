@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between'
     },
     icon: {
-        fontSize: 18,
+        fontSize: 20,
         paddingHorizontal: 10,
         color: 'black',
         alignSelf: 'center'

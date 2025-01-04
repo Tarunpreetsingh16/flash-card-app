@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
         height: '100%',
     },
     icon: {
-        fontSize: 18,
+        fontSize: 20,
         width: 30,
     },
     optionContainer: {
