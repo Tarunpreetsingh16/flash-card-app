@@ -3,7 +3,7 @@ import { useAppDispatch } from "@/hooks/useAppDispatch";
 import { updateFlashcard } from "@/store/reducers/flashcardSlice";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
-import { Image, Pressable, StyleProp, StyleSheet, Text, Vibration, View, ViewStyle } from "react-native";
+import { Image, Platform, Pressable, StyleProp, StyleSheet, Text, Vibration, View, ViewStyle } from "react-native";
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from "react-native-reanimated";
 
 interface CardViewData {
@@ -78,7 +78,7 @@ export default function CardView(cardViewData: CardViewData) {
                             style={[styles.icon]}
                             size={24}
                             onPress={() => { }} />}
-                    <Ionicons name="ellipsis-vertical"
+                    <Ionicons name={Platform.OS === 'ios' ? "ellipsis-horizontal" : "ellipsis-vertical"}
                         size={24}
                         style={[styles.icon, styles.ellipses]}
                         color="black"

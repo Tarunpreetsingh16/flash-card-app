@@ -10,7 +10,7 @@ import { deleteCategory } from "@/store/reducers/categorySlice";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { useRouter, useSearchParams } from "expo-router/build/hooks";
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Platform, StyleSheet, Text, View } from "react-native";
 import { Menu, PaperProvider } from "react-native-paper";
 
 export default function CategoryCards() {
@@ -74,7 +74,7 @@ export default function CategoryCards() {
                         visible={menuVisible}
                         onDismiss={closeMenu}
                         anchor={
-                            <Ionicons name="ellipsis-vertical"
+                            <Ionicons name={Platform.OS === 'ios' ? "ellipsis-horizontal" : "ellipsis-vertical"}
                                 size={24}
                                 style={[styles.icon, styles.ellipses]}
                                 color="black"
