@@ -7,11 +7,11 @@ type CustomLabelSwitchProps = {
     onSwitchToggle: (isSwitchOn: boolean) => void
 }
 
-const CustomSwitch = ({isSwitchOn, onSwitchToggle}: CustomLabelSwitchProps) => {
+const CustomSwitch = ({ isSwitchOn, onSwitchToggle }: CustomLabelSwitchProps) => {
     return (
         <View style={styles.container}>
             <Text style={styles.label}>Private</Text>
-            <Switch value={isSwitchOn} onValueChange={onSwitchToggle} style={styles.switch} color='#5F7470'/>
+            <Switch value={isSwitchOn} onValueChange={onSwitchToggle} style={styles.switch} color='#5F7470' />
         </View>
     )
 };
@@ -26,6 +26,9 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         shadowColor: '#000',
         elevation: 3,
+        shadowOffset: { width: 0, height: 0 },
+        shadowOpacity: 0.25,
+        shadowRadius: 1,
         paddingHorizontal: 20,
         paddingVertical: 10,
     },

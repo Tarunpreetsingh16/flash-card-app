@@ -41,7 +41,7 @@ const AddCardScreen = ({
     const [searchTerm, setSearchTerm] = useState('');
     const [debouncedTerm, setDebouncedTerm] = useState(searchTerm);
     const [category, setCategory] = useState<Category | null>();
-    const userId = 0;
+    const userId = 1;
     const categories = useAppSelector((state: RootState) => state.categories.categories).filter((category) => category.userId == 0);
 
     React.useEffect(() => {

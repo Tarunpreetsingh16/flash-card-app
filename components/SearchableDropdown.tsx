@@ -88,7 +88,9 @@ const styles = StyleSheet.create({
         borderWidth: 0.3,
         elevation: 5,
         height: 120,
-
+        shadowOffset: { width: 0, height: 0 },
+        shadowOpacity: 0.25,
+        shadowRadius: 1
     },
     optionText: {
         paddingHorizontal: 15,

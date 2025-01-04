@@ -21,9 +21,9 @@ export default function LabelTextInput(props: LabelTextInputProps) {
                     style={{ flex: 1 }}
                     value={props.value}
                     onChangeText={props.onChange}
-                    placeholder={props.placeholder} 
-                    returnKeyType={props.returnKeyType} 
-                    onSubmitEditing={props.onSubmitEditing}/>
+                    placeholder={props.placeholder}
+                    returnKeyType={props.returnKeyType}
+                    onSubmitEditing={props.onSubmitEditing} />
                 {props.children}
             </View>
         </View>
@@ -38,6 +38,9 @@ const styles = StyleSheet.create({
         elevation: 3,
         paddingHorizontal: 20,
         paddingVertical: 10,
+        shadowOffset: { width: 0, height: 0 },
+        shadowOpacity: 0.25,
+        shadowRadius: 1
     },
     label: {
         fontWeight: 'bold'

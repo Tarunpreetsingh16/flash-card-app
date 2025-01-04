@@ -60,6 +60,9 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         shadowColor: '#000',
         elevation: 3,
+        shadowOffset: { width: 0, height: 0 },
+        shadowOpacity: 0.25,
+        shadowRadius: 1
     },
     image: {
         width: '100%',

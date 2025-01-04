@@ -156,9 +156,9 @@ const styles = StyleSheet.create({
         shadowColor: '#000',
     },
     mainContent: {
-        borderWidth: 0.2,
+        borderWidth: 0.5,
         borderRadius: 10,
-        borderColor: 'rgba( 0,0,0,0.4)'
+        borderColor: 'rgba( 0,0,0,0.2)'
     },
     questionAndAnswer: {
         fontSize: 16,
@@ -167,10 +167,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderRadius: 10,
         backfaceVisibility: 'hidden',
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.2,
-        shadowRadius: 5,
         marginVertical: 5
     },
     profileContainer: {

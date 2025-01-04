@@ -72,6 +72,8 @@ const MoreScreen = () => {
 
 const styles = StyleSheet.create({
     container: {
+        flex: 1,
+        backgroundColor: "#fff",
     },
     sectionHeader: {
         padding: 10,
