@@ -16,7 +16,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 const ChangeCategory: React.FC = () => {
     const router = useRouter();
     const dispatch = useAppDispatch();
-    const categories = useAppSelector((state: RootState) => state.categories.categories)
+    const categories = useAppSelector((state) => state.categories.categories).filter((category) => category.userId === 0);
     const flashcards = useAppSelector((state: RootState) => state.flashcards.flashcards)
     const categoryNextId = useAppSelector((state: RootState) => state.categories.nextId)
     const [searchTerm, setSearchTerm] = useState('');
@@ -118,7 +118,7 @@ const ChangeCategory: React.FC = () => {
             <ScrollView style={styles.container}
                 showsVerticalScrollIndicator={false}
                 showsHorizontalScrollIndicator={false}
-                
+
             >
                 <SearchableDropdown
                     label='Category'

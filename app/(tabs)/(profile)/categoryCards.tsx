@@ -28,7 +28,7 @@ export default function CategoryCards() {
         if (flashcards && categoryIdString && !isNaN(parseInt(categoryIdString.trim()))) {
             const category = getCategory();
             const filteredFlashcards = flashcards.filter((card) => card.userId == userId && card.categoryId == category?.id);
-            setCategoryFlashcards(filteredFlashcards.reverse());
+            setCategoryFlashcards(filteredFlashcards);
         }
     }, [flashcards])
 

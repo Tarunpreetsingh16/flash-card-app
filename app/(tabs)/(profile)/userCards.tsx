@@ -17,7 +17,7 @@ export default function UserCards() {
     useEffect(() => {
         if (flashcards) {
             const filteredFlashcards = flashcards.filter((card) => card.userId == userId && (favorite ? card.favorite : true));
-            setUserFlashcards(filteredFlashcards.reverse());
+            setUserFlashcards(filteredFlashcards);
         }
     }, [flashcards])
     return (

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
-import { useNavigation, useRouter } from 'expo-router';
+import { StyleSheet } from 'react-native';
 import CardList from '@/components/CardList';
 import FlashcardUtility from '@/utils/FlashcardUtility';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
@@ -11,7 +10,7 @@ import CategoryUtility from '@/utils/CategoryUtility';
 import { setCategories } from '@/store/reducers/categorySlice';
 import CustomAppBar from '@/components/CustomAppBar';
 
-const FeedRoute: React.FC = () => {
+const FeedScreen: React.FC = () => {
     const dispatch = useAppDispatch();
     const flashcards = useAppSelector((state: RootState) => state.flashcards.flashcards)
     const [othersFlashcards, setOthersFlashcards] = useState(flashcards);
@@ -35,7 +34,7 @@ const FeedRoute: React.FC = () => {
     useEffect(() => {
         if (flashcards) {
             const filteredFlashcards = flashcards.filter((card) => card.userId != 0 && !card.isPrivate);
-            setOthersFlashcards(filteredFlashcards.reverse());
+            setOthersFlashcards(filteredFlashcards);
         }
     }, [flashcards])
 
@@ -76,4 +75,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default FeedRoute;
+export default FeedScreen;
