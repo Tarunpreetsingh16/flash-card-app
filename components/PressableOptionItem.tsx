@@ -1,4 +1,4 @@
-import { FontAwesome } from "@expo/vector-icons";
+import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { Pressable, StyleSheet, Text } from "react-native";
 
 type PressableOptionItemProps = {
@@ -10,7 +10,10 @@ const PressableOptionItem = ({ label, onPress }: PressableOptionItemProps) => {
     return (
         <Pressable style={[styles.optionContainer]} onPress={(onPress)}>
             <Text style={[styles.label]}>{label}</Text>
-            <FontAwesome name="arrow-right" />
+            <Ionicons name="arrow-forward-circle-outline"
+                size={24}
+                style={[styles.icon]}
+                color="black"/>
         </Pressable>
     )
 }
@@ -26,6 +29,11 @@ const styles = StyleSheet.create({
     },
     label: {
         fontSize: 16,
+    },
+    icon: {
+        fontSize: 20,
+        paddingHorizontal: 10,
+        color: 'black'
     }
 })
 

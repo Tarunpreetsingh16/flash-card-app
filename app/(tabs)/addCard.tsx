@@ -159,13 +159,13 @@ const AddCardScreen = ({
                 showsVerticalScrollIndicator={false}
                 showsHorizontalScrollIndicator={false}>
                 <LabelTextInput
-                    placeholder="Front of flashcard..."
+                    placeholder="Front of the flashcard..."
                     value={flashcard.front}
                     onChange={updateFront}
                     label='Question'
                 />
                 <LabelTextInput
-                    placeholder="Correct answer..."
+                    placeholder="Back of the flashcard..."
                     value={flashcard.back}
                     onChange={updateBack}
                     label='Answer'
