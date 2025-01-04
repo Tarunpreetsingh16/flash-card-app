@@ -51,20 +51,10 @@ const flashcardSlice = createSlice({
         clearCards: (state) => {
             state.flashcards = []
             FlashcardUtility.saveCards(state.flashcards);
-        },
-        toggleFavorite: (state, action: PayloadAction<number>) => {
-            const id = action.payload;
-            for (let i = 0; i < state.flashcards.length; i++) {
-                if (state.flashcards[i].id === id) {
-                    state.flashcards[i].favorite = !state.flashcards[i].favorite;
-                }
-            }
-            console.log(`Successfully (un)favorited card with id ${id}`)
-            FlashcardUtility.saveCards(state.flashcards);
         }
     }
 });
 
 
-export const { setFlashcards, addFlashcard, updateFlashcard, deleteFlashcard, clearCards, toggleFavorite } = flashcardSlice.actions;
+export const { setFlashcards, addFlashcard, updateFlashcard, deleteFlashcard, clearCards } = flashcardSlice.actions;
 export default flashcardSlice.reducer;

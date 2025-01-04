@@ -9,7 +9,8 @@ export interface Flashcard {
     imageUri: string | null;
     isPrivate: boolean;
     options: Option[];
-    categoryId: number
+    categoryId: number,
+    saved?: boolean;
     favorite?: boolean;
     likes?: number;
     dislikes?: number;

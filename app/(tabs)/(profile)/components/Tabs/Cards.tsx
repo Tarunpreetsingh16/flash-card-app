@@ -14,7 +14,12 @@ export default function Cards() {
 
     const routeToFavoriteCards = () => {
         Vibration.vibrate(50)
-        router.push('/(tabs)/(profile)/userCards?favorite=true')
+        router.push('/(tabs)/(profile)/userCards?type=favorite')
+    }
+
+    const routeToSavedCards = () => {
+        Vibration.vibrate(50)
+        router.push('/(tabs)/(profile)/userCards?type=saved')
     }
 
     return (
@@ -28,7 +33,7 @@ export default function Cards() {
             </View>
             <Divider />
             <View style={styles.optionContainer}>
-                <PressableOptionItem label="Saved Cards" onPress={() => console.log("saved cards")} />
+                <PressableOptionItem label="Saved Cards" onPress={routeToSavedCards} />
             </View>
             <Divider />
         </ScrollView>

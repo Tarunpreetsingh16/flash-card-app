@@ -1,6 +1,6 @@
 import { Flashcard } from "@/data/FlashCard";
 import { useAppDispatch } from "@/hooks/useAppDispatch";
-import { toggleFavorite } from "@/store/reducers/flashcardSlice";
+import { updateFlashcard } from "@/store/reducers/flashcardSlice";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
 import { Image, Pressable, StyleProp, StyleSheet, Text, Vibration, View, ViewStyle } from "react-native";
@@ -46,7 +46,12 @@ export default function CardView(cardViewData: CardViewData) {
 
     const onFavoritePress = () => {
         Vibration.vibrate(50)
-        dispatch(toggleFavorite(flashCard.id));
+        dispatch(updateFlashcard({...flashCard, favorite: !flashCard.favorite}));
+    }
+
+    const onSavePress = () => {
+        Vibration.vibrate(50);
+        dispatch(updateFlashcard({...flashCard, saved: !flashCard.saved}));
     }
 
     const { flashCard, style } = cardViewData;
@@ -129,11 +134,11 @@ export default function CardView(cardViewData: CardViewData) {
                 {
                     flashCard.userId != 0
                         ? <View style={styles.otherAttributes}>
-                            <Ionicons name="bookmark-outline"
+                            <Ionicons name={flashCard.saved ? "bookmark" : "bookmark-outline"} 
                                 style={[styles.icon]}
                                 size={24}
                                 color="black"
-                                onPress={() => { }} />
+                                onPress={onSavePress} />
                         </View>
                         : null
                 }

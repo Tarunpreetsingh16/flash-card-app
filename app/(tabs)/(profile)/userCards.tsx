@@ -11,32 +11,46 @@ export default function UserCards() {
     const userId = 0;
     const flashcards = useAppSelector((state: RootState) => state.flashcards.flashcards)
     const [userFlashcards, setUserFlashcards] = useState(flashcards);
+    const [title, setTitle] = useState('My Cards');
+    const [emptyListMsg, setEmptyListMsg] = useState("Let's create my first card!");
     const params = useSearchParams();
-    const favorite = params.get('favorite');
+    const type = params.get('type');
 
     useEffect(() => {
         if (flashcards) {
-            const filteredFlashcards = flashcards.filter((card) => card.userId == userId && (favorite ? card.favorite : true));
-            setUserFlashcards(filteredFlashcards);
+            let filteredFlashcards;
+            switch (type) {
+                case 'favorite':
+                    filteredFlashcards = flashcards.filter((card) => card.userId == userId && card.favorite);
+                    setUserFlashcards(filteredFlashcards);
+                    setTitle('Favorite Cards');
+                    setEmptyListMsg("Add your cards as favorite!");
+                    break;
+                case 'saved':
+                    filteredFlashcards = flashcards.filter((card) => card.saved);
+                    setUserFlashcards(filteredFlashcards);
+                    setTitle('Saved Cards');
+                    setEmptyListMsg("Save other's cards you like!");
+                    break;
+                default:
+                    filteredFlashcards = flashcards.filter((card) => card.userId == userId);
+                    setUserFlashcards(filteredFlashcards);
+                    break;
+            }
         }
+
     }, [flashcards])
+
     return (
         <>
-            <CustomAppBar title={favorite ? "Favorite Cards" : "My Cards"} isOnBackPressVisible />
+            <CustomAppBar title={title} isOnBackPressVisible />
             {
                 userFlashcards.length > 0
                     ? <CardList flashcards={userFlashcards} />
                     : <View style={styles.noCardView}>
-                        {
-                            favorite ?
-                                <Text style={styles.noCardMessage}>
-                                    Add your cards as favorite!
-                                </Text> :
-                                <Text style={styles.noCardMessage}>
-                                    Let's create my first card!
-                                </Text>
-                        }
-
+                        <Text style={styles.noCardMessage}>
+                            {emptyListMsg}
+                        </Text>
                     </View>
             }
         </>
